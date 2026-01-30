@@ -6,7 +6,6 @@ REST API App untuk aplikasi JVT OptiMES berbasis NestJS, Prisma, PostGresQL
 
 ### 1. Clone this repo and navigate into the project directory
 
-
 ```
 git clone https://github.com/kufayeka/jvt_optimes_api
 ```
@@ -17,22 +16,20 @@ Then, navigate into the project directory:
 cd jvt_optimes_api
 ```
 
-```
-
 Install npm dependencies:
 
 ```
 cd prisma-examples/orm/nest
+```
 npm install
 ```
 
 ### 2. Create, Migrate and seed the database
 
-```terminal
+```
 npx prisma migrate dev
 ```
-
-```terminal
+```
 npx prisma db seed
 ```
 
