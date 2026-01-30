@@ -21,6 +21,7 @@ Install npm dependencies:
 ```
 cd prisma-examples/orm/nest
 ```
+```
 npm install
 ```
 
