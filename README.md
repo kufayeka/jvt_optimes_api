@@ -19,7 +19,7 @@ cd jvt_optimes_api
 Install npm dependencies:
 
 ```
-cd prisma-examples/orm/nest
+cd ./jvt_optimes_api
 ```
 ```
 npm install
