@@ -1,0 +1,77 @@
+generator client {
+  provider   = "prisma-client"
+  output     = "./generated"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
+  posts Post[]
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  viewCount Int      @default(0)
+  author    User?    @relation(fields: [authorId], references: [id])
+  authorId  Int?
+}
+
+model Lookup {
+  id          String   @id @default(uuid()) @db.Uuid
+  lookup_type String   @db.VarChar(100)
+  code        String   @db.VarChar(50)
+  label       String   @db.VarChar(100)
+  description String?
+  sort_order  Int?
+  is_active   Boolean  @default(true)
+  attribute   Json?
+
+  // 🔁 opposite relations
+  accounts_as_lifecycle Account[] @relation("account_lifecycle_lookup")
+  accounts_as_type      Account[] @relation("account_type_lookup")
+  accounts_as_role      Account[] @relation("account_role_lookup")
+
+  @@unique([lookup_type, code])
+  @@index([lookup_type])
+}
+
+model Account {
+  id                   String   @id @default(uuid()) @db.Uuid
+  username             String   @unique @db.VarChar(50)
+  password             String   @db.VarChar(100)
+  full_name            String   @db.VarChar(100)
+  phone_number         String?  @db.VarChar(100)
+  email                String?  @db.VarChar(100)
+  attribute            Json?
+
+  account_lifecycle    String     @db.Uuid
+  account_lifecycle_lookup Lookup @relation("account_lifecycle_lookup", fields: [account_lifecycle], references: [id])
+
+  account_type         String   @db.Uuid
+  account_type_lookup  Lookup   @relation("account_type_lookup", fields: [account_type], references: [id])
+
+  account_role         String?  @db.Uuid
+  account_role_lookup  Lookup?  @relation("account_role_lookup", fields: [account_role], references: [id])
+
+  account_expiry_date  DateTime?
+
+  password_last_changed DateTime?
+  password_expiry_time  DateTime?
+  must_change_password  Boolean  @default(true)
+
+  last_login_time      DateTime?
+
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
+  
