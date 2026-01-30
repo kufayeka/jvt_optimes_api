@@ -11,7 +11,8 @@ export class LookupService {
   }
 
   findOne(id: string) {
-    return this.prisma.lookup.findUnique({ where: { id: id } });
+    const nid = typeof id === 'string' ? parseInt(id, 10) : id;
+    return this.prisma.lookup.findUnique({ where: { id: nid } });
   }
 
   create(data: any) {
@@ -19,10 +20,12 @@ export class LookupService {
   }
 
   update(id: string, data: any) {
-    return this.prisma.lookup.update({ where: { id: id }, data });
+    const nid = typeof id === 'string' ? parseInt(id, 10) : id;
+    return this.prisma.lookup.update({ where: { id: nid }, data });
   }
 
   setActive(id: string, isActive: boolean) {
-    return this.prisma.lookup.update({ where: { id: id }, data: { is_active: isActive } });
+    const nid = typeof id === 'string' ? parseInt(id, 10) : id;
+    return this.prisma.lookup.update({ where: { id: nid }, data: { is_active: isActive } });
   }
 }

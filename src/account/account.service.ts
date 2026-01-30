@@ -12,33 +12,16 @@ export class AccountService {
   constructor(private prisma: PrismaService) {}
 
   async getAll() {
-    return this.prisma.account.findMany({
-      select: {
-        id: true,
-        username: true,
-        full_name: true,
-        phone_number: true,
-        email: true,
-        attribute: true,
-        account_type: true,
-        account_role: true,
-        account_expiry_date: true,
-        password_last_changed: true,
-        must_change_password: true,
-        last_login_time: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+    const rows = await this.prisma.account.findMany({
+      include: { account_lifecycle_lookup: true, account_type_lookup: true, account_role_lookup: true },
+     });
+    return rows.map((r: any) => this.formatAccount(r as any));
   }
 
   async getById(id: string) {
-    const acc = await this.prisma.account.findUnique({ where: { id: id } });
+    const acc = await this.prisma.account.findUnique({ where: { id: id }, include: { account_lifecycle_lookup: true, account_type_lookup: true, account_role_lookup: true } });
     if (!acc) throw new NotFoundException('Account not found');
-    // remove password
-    // map as returned object
-    const { password, ...rest } = acc as any;
-    return rest;
+    return this.formatAccount(acc as any);
   }
 
   private createValidationSchema() {
@@ -82,8 +65,9 @@ export class AccountService {
     return lifecycle;
   }
 
-  private async resolveAccountType(account_type: string) {
-    const acctType = await this.prisma.lookup.findUnique({ where: { id: account_type } });
+  private async resolveAccountType(account_type: string | number) {
+    const id = typeof account_type === 'string' ? parseInt(account_type, 10) : account_type;
+    const acctType = await this.prisma.lookup.findUnique({ where: { id } });
     if (!acctType) throw new BadRequestException('account_type lookup not found');
     return acctType;
   }
@@ -91,8 +75,19 @@ export class AccountService {
   private async resolveAccountWithLookups(username: string) {
     return this.prisma.account.findUnique({
       where: { username },
-      include: { account_lifecycle_lookup: true, account_type_lookup: true },
+      include: { account_lifecycle_lookup: true, account_type_lookup: true, account_role_lookup: true },
     });
+  }
+
+  private formatAccount(acc: any) {
+    if (!acc) return acc;
+    const { password, account_lifecycle_lookup, account_type_lookup, account_role_lookup, ...rest } = acc as any;
+    return {
+      ...rest,
+      account_lifecycle: account_lifecycle_lookup || null,
+      account_type: account_type_lookup || null,
+      account_role: account_role_lookup || null,
+    };
   }
 
   private async expireIfNeeded(account: any) {
@@ -144,8 +139,8 @@ export class AccountService {
       phone_number: data.phone_number || null,
       email: data.email || null,
       attribute: data.attribute || null,
-      account_type: data.account_type,
-      account_role: data.account_role || null,
+      account_type: typeof data.account_type === 'string' ? parseInt(data.account_type, 10) : data.account_type,
+      account_role: data.account_role ? (typeof data.account_role === 'string' ? parseInt(data.account_role, 10) : data.account_role) : null,
       account_expiry_date: data.account_expiry_date ? new Date(data.account_expiry_date) : null,
       must_change_password: true,
       password_last_changed: null,
@@ -156,8 +151,8 @@ export class AccountService {
     payload.account_lifecycle = lifecycle.id;
 
     const created = await this.prisma.account.create({ data: payload });
-    const { password, ...rest } = created as any;
-    return { account: rest, initial_password: generatedPassword };
+    const acc = await this.prisma.account.findUnique({ where: { username: created.username }, include: { account_lifecycle_lookup: true, account_type_lookup: true, account_role_lookup: true } });
+    return { account: this.formatAccount(acc), initial_password: generatedPassword };
   }
 
   async login(username: string, password: string) {
@@ -175,8 +170,7 @@ export class AccountService {
 
     await this.prisma.account.update({ where: { id: acc.id }, data: { last_login_time: new Date() } });
 
-    const { password: _p, account_lifecycle_lookup, account_type_lookup, ...rest } = acc as any;
-    return rest;
+    return this.formatAccount(acc);
   }
 
   async resetPassword(id: string, newPassword: string) {
@@ -200,27 +194,28 @@ export class AccountService {
       updateData.account_lifecycle = activeLifecycle.id;
     }
 
-    const updated = await this.prisma.account.update({
+      const updatedAccount = await this.prisma.account.update({
       where: { id: id },
       data: updateData,
     });
-    const { password, ...rest } = updated as any;
-    return rest;
+      const freshAccount = await this.prisma.account.findUnique({ where: { id: updatedAccount.id }, include: { account_lifecycle_lookup: true, account_type_lookup: true, account_role_lookup: true } });
+      return this.formatAccount(freshAccount);
   }
 
-  async editRole(id: string, roleLookupId: string) {
-    const role = await this.prisma.lookup.findUnique({ where: { id: roleLookupId } });
+  async editRole(id: string, roleLookupId: number | string) {
+    const roleId = typeof roleLookupId === 'string' ? parseInt(roleLookupId, 10) : roleLookupId;
+    const role = await this.prisma.lookup.findUnique({ where: { id: roleId } });
     if (!role) throw new BadRequestException('Role lookup not found');
-    const updated = await this.prisma.account.update({ where: { id: id }, data: { account_role: roleLookupId } });
-    const { password, ...rest } = updated as any;
-    return rest;
+    await this.prisma.account.update({ where: { id: id }, data: { account_role: roleId } });
+    const acc = await this.prisma.account.findUnique({ where: { id }, include: { account_lifecycle_lookup: true, account_type_lookup: true, account_role_lookup: true } });
+    return this.formatAccount(acc);
   }
 
   async setLifecycle(id: string, lifecycleCode: string) {
     const lifecycle = await this.resolveLifecycle(lifecycleCode);
-    const updated = await this.prisma.account.update({ where: { id: id }, data: { account_lifecycle: lifecycle.id } });
-    const { password, ...rest } = updated as any;
-    return rest;
+    await this.prisma.account.update({ where: { id: id }, data: { account_lifecycle: lifecycle.id } });
+    const acc = await this.prisma.account.findUnique({ where: { id }, include: { account_lifecycle_lookup: true, account_type_lookup: true, account_role_lookup: true } });
+    return this.formatAccount(acc);
   }
 
   async softDelete(id: string) {
@@ -237,8 +232,7 @@ export class AccountService {
     if (acc.account_lifecycle_lookup?.code === 'DELETED') throw new UnauthorizedException('Invalid cookie');
     if (acc.account_lifecycle_lookup?.code === 'DISABLED') throw new UnauthorizedException('Invalid cookie');
     if (acc.account_lifecycle_lookup?.code === 'EXPIRED') throw new UnauthorizedException('Invalid cookie');
-
-    const { password, account_lifecycle_lookup, account_type_lookup, ...rest } = acc as any;
-    return rest;
+    const fresh = await this.prisma.account.findUnique({ where: { id }, include: { account_lifecycle_lookup: true, account_type_lookup: true, account_role_lookup: true } });
+    return this.formatAccount(fresh);
   }
 }

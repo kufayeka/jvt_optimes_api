@@ -20,8 +20,22 @@ export type AccountModel = runtime.Types.Result.DefaultSelection<Prisma.$Account
 
 export type AggregateAccount = {
   _count: AccountCountAggregateOutputType | null
+  _avg: AccountAvgAggregateOutputType | null
+  _sum: AccountSumAggregateOutputType | null
   _min: AccountMinAggregateOutputType | null
   _max: AccountMaxAggregateOutputType | null
+}
+
+export type AccountAvgAggregateOutputType = {
+  account_lifecycle: number | null
+  account_type: number | null
+  account_role: number | null
+}
+
+export type AccountSumAggregateOutputType = {
+  account_lifecycle: number | null
+  account_type: number | null
+  account_role: number | null
 }
 
 export type AccountMinAggregateOutputType = {
@@ -31,16 +45,14 @@ export type AccountMinAggregateOutputType = {
   full_name: string | null
   phone_number: string | null
   email: string | null
-  account_lifecycle: string | null
-  account_type: string | null
-  account_role: string | null
+  account_lifecycle: number | null
+  account_type: number | null
+  account_role: number | null
   account_expiry_date: Date | null
   password_last_changed: Date | null
   password_expiry_time: Date | null
   must_change_password: boolean | null
   last_login_time: Date | null
-  createdAt: Date | null
-  updatedAt: Date | null
 }
 
 export type AccountMaxAggregateOutputType = {
@@ -50,16 +62,14 @@ export type AccountMaxAggregateOutputType = {
   full_name: string | null
   phone_number: string | null
   email: string | null
-  account_lifecycle: string | null
-  account_type: string | null
-  account_role: string | null
+  account_lifecycle: number | null
+  account_type: number | null
+  account_role: number | null
   account_expiry_date: Date | null
   password_last_changed: Date | null
   password_expiry_time: Date | null
   must_change_password: boolean | null
   last_login_time: Date | null
-  createdAt: Date | null
-  updatedAt: Date | null
 }
 
 export type AccountCountAggregateOutputType = {
@@ -78,11 +88,21 @@ export type AccountCountAggregateOutputType = {
   password_expiry_time: number
   must_change_password: number
   last_login_time: number
-  createdAt: number
-  updatedAt: number
   _all: number
 }
 
+
+export type AccountAvgAggregateInputType = {
+  account_lifecycle?: true
+  account_type?: true
+  account_role?: true
+}
+
+export type AccountSumAggregateInputType = {
+  account_lifecycle?: true
+  account_type?: true
+  account_role?: true
+}
 
 export type AccountMinAggregateInputType = {
   id?: true
@@ -99,8 +119,6 @@ export type AccountMinAggregateInputType = {
   password_expiry_time?: true
   must_change_password?: true
   last_login_time?: true
-  createdAt?: true
-  updatedAt?: true
 }
 
 export type AccountMaxAggregateInputType = {
@@ -118,8 +136,6 @@ export type AccountMaxAggregateInputType = {
   password_expiry_time?: true
   must_change_password?: true
   last_login_time?: true
-  createdAt?: true
-  updatedAt?: true
 }
 
 export type AccountCountAggregateInputType = {
@@ -138,8 +154,6 @@ export type AccountCountAggregateInputType = {
   password_expiry_time?: true
   must_change_password?: true
   last_login_time?: true
-  createdAt?: true
-  updatedAt?: true
   _all?: true
 }
 
@@ -181,6 +195,18 @@ export type AccountAggregateArgs<ExtArgs extends runtime.Types.Extensions.Intern
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: AccountAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: AccountSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: AccountMinAggregateInputType
@@ -211,6 +237,8 @@ export type AccountGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   _count?: AccountCountAggregateInputType | true
+  _avg?: AccountAvgAggregateInputType
+  _sum?: AccountSumAggregateInputType
   _min?: AccountMinAggregateInputType
   _max?: AccountMaxAggregateInputType
 }
@@ -223,17 +251,17 @@ export type AccountGroupByOutputType = {
   phone_number: string | null
   email: string | null
   attribute: runtime.JsonValue | null
-  account_lifecycle: string
-  account_type: string
-  account_role: string | null
+  account_lifecycle: number
+  account_type: number
+  account_role: number | null
   account_expiry_date: Date | null
   password_last_changed: Date | null
   password_expiry_time: Date | null
   must_change_password: boolean
   last_login_time: Date | null
-  createdAt: Date
-  updatedAt: Date
   _count: AccountCountAggregateOutputType | null
+  _avg: AccountAvgAggregateOutputType | null
+  _sum: AccountSumAggregateOutputType | null
   _min: AccountMinAggregateOutputType | null
   _max: AccountMaxAggregateOutputType | null
 }
@@ -264,16 +292,14 @@ export type AccountWhereInput = {
   phone_number?: Prisma.StringNullableFilter<"Account"> | string | null
   email?: Prisma.StringNullableFilter<"Account"> | string | null
   attribute?: Prisma.JsonNullableFilter<"Account">
-  account_lifecycle?: Prisma.UuidFilter<"Account"> | string
-  account_type?: Prisma.UuidFilter<"Account"> | string
-  account_role?: Prisma.UuidNullableFilter<"Account"> | string | null
+  account_lifecycle?: Prisma.IntFilter<"Account"> | number
+  account_type?: Prisma.IntFilter<"Account"> | number
+  account_role?: Prisma.IntNullableFilter<"Account"> | number | null
   account_expiry_date?: Prisma.DateTimeNullableFilter<"Account"> | Date | string | null
   password_last_changed?: Prisma.DateTimeNullableFilter<"Account"> | Date | string | null
   password_expiry_time?: Prisma.DateTimeNullableFilter<"Account"> | Date | string | null
   must_change_password?: Prisma.BoolFilter<"Account"> | boolean
   last_login_time?: Prisma.DateTimeNullableFilter<"Account"> | Date | string | null
-  createdAt?: Prisma.DateTimeFilter<"Account"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Account"> | Date | string
   account_lifecycle_lookup?: Prisma.XOR<Prisma.LookupScalarRelationFilter, Prisma.LookupWhereInput>
   account_type_lookup?: Prisma.XOR<Prisma.LookupScalarRelationFilter, Prisma.LookupWhereInput>
   account_role_lookup?: Prisma.XOR<Prisma.LookupNullableScalarRelationFilter, Prisma.LookupWhereInput> | null
@@ -295,8 +321,6 @@ export type AccountOrderByWithRelationInput = {
   password_expiry_time?: Prisma.SortOrderInput | Prisma.SortOrder
   must_change_password?: Prisma.SortOrder
   last_login_time?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
   account_lifecycle_lookup?: Prisma.LookupOrderByWithRelationInput
   account_type_lookup?: Prisma.LookupOrderByWithRelationInput
   account_role_lookup?: Prisma.LookupOrderByWithRelationInput
@@ -313,16 +337,14 @@ export type AccountWhereUniqueInput = Prisma.AtLeast<{
   phone_number?: Prisma.StringNullableFilter<"Account"> | string | null
   email?: Prisma.StringNullableFilter<"Account"> | string | null
   attribute?: Prisma.JsonNullableFilter<"Account">
-  account_lifecycle?: Prisma.UuidFilter<"Account"> | string
-  account_type?: Prisma.UuidFilter<"Account"> | string
-  account_role?: Prisma.UuidNullableFilter<"Account"> | string | null
+  account_lifecycle?: Prisma.IntFilter<"Account"> | number
+  account_type?: Prisma.IntFilter<"Account"> | number
+  account_role?: Prisma.IntNullableFilter<"Account"> | number | null
   account_expiry_date?: Prisma.DateTimeNullableFilter<"Account"> | Date | string | null
   password_last_changed?: Prisma.DateTimeNullableFilter<"Account"> | Date | string | null
   password_expiry_time?: Prisma.DateTimeNullableFilter<"Account"> | Date | string | null
   must_change_password?: Prisma.BoolFilter<"Account"> | boolean
   last_login_time?: Prisma.DateTimeNullableFilter<"Account"> | Date | string | null
-  createdAt?: Prisma.DateTimeFilter<"Account"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Account"> | Date | string
   account_lifecycle_lookup?: Prisma.XOR<Prisma.LookupScalarRelationFilter, Prisma.LookupWhereInput>
   account_type_lookup?: Prisma.XOR<Prisma.LookupScalarRelationFilter, Prisma.LookupWhereInput>
   account_role_lookup?: Prisma.XOR<Prisma.LookupNullableScalarRelationFilter, Prisma.LookupWhereInput> | null
@@ -344,11 +366,11 @@ export type AccountOrderByWithAggregationInput = {
   password_expiry_time?: Prisma.SortOrderInput | Prisma.SortOrder
   must_change_password?: Prisma.SortOrder
   last_login_time?: Prisma.SortOrderInput | Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
   _count?: Prisma.AccountCountOrderByAggregateInput
+  _avg?: Prisma.AccountAvgOrderByAggregateInput
   _max?: Prisma.AccountMaxOrderByAggregateInput
   _min?: Prisma.AccountMinOrderByAggregateInput
+  _sum?: Prisma.AccountSumOrderByAggregateInput
 }
 
 export type AccountScalarWhereWithAggregatesInput = {
@@ -362,16 +384,14 @@ export type AccountScalarWhereWithAggregatesInput = {
   phone_number?: Prisma.StringNullableWithAggregatesFilter<"Account"> | string | null
   email?: Prisma.StringNullableWithAggregatesFilter<"Account"> | string | null
   attribute?: Prisma.JsonNullableWithAggregatesFilter<"Account">
-  account_lifecycle?: Prisma.UuidWithAggregatesFilter<"Account"> | string
-  account_type?: Prisma.UuidWithAggregatesFilter<"Account"> | string
-  account_role?: Prisma.UuidNullableWithAggregatesFilter<"Account"> | string | null
+  account_lifecycle?: Prisma.IntWithAggregatesFilter<"Account"> | number
+  account_type?: Prisma.IntWithAggregatesFilter<"Account"> | number
+  account_role?: Prisma.IntNullableWithAggregatesFilter<"Account"> | number | null
   account_expiry_date?: Prisma.DateTimeNullableWithAggregatesFilter<"Account"> | Date | string | null
   password_last_changed?: Prisma.DateTimeNullableWithAggregatesFilter<"Account"> | Date | string | null
   password_expiry_time?: Prisma.DateTimeNullableWithAggregatesFilter<"Account"> | Date | string | null
   must_change_password?: Prisma.BoolWithAggregatesFilter<"Account"> | boolean
   last_login_time?: Prisma.DateTimeNullableWithAggregatesFilter<"Account"> | Date | string | null
-  createdAt?: Prisma.DateTimeWithAggregatesFilter<"Account"> | Date | string
-  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Account"> | Date | string
 }
 
 export type AccountCreateInput = {
@@ -387,8 +407,6 @@ export type AccountCreateInput = {
   password_expiry_time?: Date | string | null
   must_change_password?: boolean
   last_login_time?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
   account_lifecycle_lookup: Prisma.LookupCreateNestedOneWithoutAccounts_as_lifecycleInput
   account_type_lookup: Prisma.LookupCreateNestedOneWithoutAccounts_as_typeInput
   account_role_lookup?: Prisma.LookupCreateNestedOneWithoutAccounts_as_roleInput
@@ -402,16 +420,14 @@ export type AccountUncheckedCreateInput = {
   phone_number?: string | null
   email?: string | null
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  account_lifecycle: string
-  account_type: string
-  account_role?: string | null
+  account_lifecycle: number
+  account_type: number
+  account_role?: number | null
   account_expiry_date?: Date | string | null
   password_last_changed?: Date | string | null
   password_expiry_time?: Date | string | null
   must_change_password?: boolean
   last_login_time?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
 }
 
 export type AccountUpdateInput = {
@@ -427,8 +443,6 @@ export type AccountUpdateInput = {
   password_expiry_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
   last_login_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   account_lifecycle_lookup?: Prisma.LookupUpdateOneRequiredWithoutAccounts_as_lifecycleNestedInput
   account_type_lookup?: Prisma.LookupUpdateOneRequiredWithoutAccounts_as_typeNestedInput
   account_role_lookup?: Prisma.LookupUpdateOneWithoutAccounts_as_roleNestedInput
@@ -442,16 +456,14 @@ export type AccountUncheckedUpdateInput = {
   phone_number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  account_lifecycle?: Prisma.StringFieldUpdateOperationsInput | string
-  account_type?: Prisma.StringFieldUpdateOperationsInput | string
-  account_role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  account_lifecycle?: Prisma.IntFieldUpdateOperationsInput | number
+  account_type?: Prisma.IntFieldUpdateOperationsInput | number
+  account_role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   account_expiry_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password_last_changed?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password_expiry_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
   last_login_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AccountCreateManyInput = {
@@ -462,16 +474,14 @@ export type AccountCreateManyInput = {
   phone_number?: string | null
   email?: string | null
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  account_lifecycle: string
-  account_type: string
-  account_role?: string | null
+  account_lifecycle: number
+  account_type: number
+  account_role?: number | null
   account_expiry_date?: Date | string | null
   password_last_changed?: Date | string | null
   password_expiry_time?: Date | string | null
   must_change_password?: boolean
   last_login_time?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
 }
 
 export type AccountUpdateManyMutationInput = {
@@ -487,8 +497,6 @@ export type AccountUpdateManyMutationInput = {
   password_expiry_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
   last_login_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AccountUncheckedUpdateManyInput = {
@@ -499,16 +507,14 @@ export type AccountUncheckedUpdateManyInput = {
   phone_number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  account_lifecycle?: Prisma.StringFieldUpdateOperationsInput | string
-  account_type?: Prisma.StringFieldUpdateOperationsInput | string
-  account_role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  account_lifecycle?: Prisma.IntFieldUpdateOperationsInput | number
+  account_type?: Prisma.IntFieldUpdateOperationsInput | number
+  account_role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   account_expiry_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password_last_changed?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password_expiry_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
   last_login_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AccountListRelationFilter = {
@@ -537,8 +543,12 @@ export type AccountCountOrderByAggregateInput = {
   password_expiry_time?: Prisma.SortOrder
   must_change_password?: Prisma.SortOrder
   last_login_time?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
+}
+
+export type AccountAvgOrderByAggregateInput = {
+  account_lifecycle?: Prisma.SortOrder
+  account_type?: Prisma.SortOrder
+  account_role?: Prisma.SortOrder
 }
 
 export type AccountMaxOrderByAggregateInput = {
@@ -556,8 +566,6 @@ export type AccountMaxOrderByAggregateInput = {
   password_expiry_time?: Prisma.SortOrder
   must_change_password?: Prisma.SortOrder
   last_login_time?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
 }
 
 export type AccountMinOrderByAggregateInput = {
@@ -575,8 +583,12 @@ export type AccountMinOrderByAggregateInput = {
   password_expiry_time?: Prisma.SortOrder
   must_change_password?: Prisma.SortOrder
   last_login_time?: Prisma.SortOrder
-  createdAt?: Prisma.SortOrder
-  updatedAt?: Prisma.SortOrder
+}
+
+export type AccountSumOrderByAggregateInput = {
+  account_lifecycle?: Prisma.SortOrder
+  account_type?: Prisma.SortOrder
+  account_role?: Prisma.SortOrder
 }
 
 export type AccountCreateNestedManyWithoutAccount_lifecycle_lookupInput = {
@@ -722,8 +734,6 @@ export type AccountCreateWithoutAccount_lifecycle_lookupInput = {
   password_expiry_time?: Date | string | null
   must_change_password?: boolean
   last_login_time?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
   account_type_lookup: Prisma.LookupCreateNestedOneWithoutAccounts_as_typeInput
   account_role_lookup?: Prisma.LookupCreateNestedOneWithoutAccounts_as_roleInput
 }
@@ -736,15 +746,13 @@ export type AccountUncheckedCreateWithoutAccount_lifecycle_lookupInput = {
   phone_number?: string | null
   email?: string | null
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  account_type: string
-  account_role?: string | null
+  account_type: number
+  account_role?: number | null
   account_expiry_date?: Date | string | null
   password_last_changed?: Date | string | null
   password_expiry_time?: Date | string | null
   must_change_password?: boolean
   last_login_time?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
 }
 
 export type AccountCreateOrConnectWithoutAccount_lifecycle_lookupInput = {
@@ -770,8 +778,6 @@ export type AccountCreateWithoutAccount_type_lookupInput = {
   password_expiry_time?: Date | string | null
   must_change_password?: boolean
   last_login_time?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
   account_lifecycle_lookup: Prisma.LookupCreateNestedOneWithoutAccounts_as_lifecycleInput
   account_role_lookup?: Prisma.LookupCreateNestedOneWithoutAccounts_as_roleInput
 }
@@ -784,15 +790,13 @@ export type AccountUncheckedCreateWithoutAccount_type_lookupInput = {
   phone_number?: string | null
   email?: string | null
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  account_lifecycle: string
-  account_role?: string | null
+  account_lifecycle: number
+  account_role?: number | null
   account_expiry_date?: Date | string | null
   password_last_changed?: Date | string | null
   password_expiry_time?: Date | string | null
   must_change_password?: boolean
   last_login_time?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
 }
 
 export type AccountCreateOrConnectWithoutAccount_type_lookupInput = {
@@ -818,8 +822,6 @@ export type AccountCreateWithoutAccount_role_lookupInput = {
   password_expiry_time?: Date | string | null
   must_change_password?: boolean
   last_login_time?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
   account_lifecycle_lookup: Prisma.LookupCreateNestedOneWithoutAccounts_as_lifecycleInput
   account_type_lookup: Prisma.LookupCreateNestedOneWithoutAccounts_as_typeInput
 }
@@ -832,15 +834,13 @@ export type AccountUncheckedCreateWithoutAccount_role_lookupInput = {
   phone_number?: string | null
   email?: string | null
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  account_lifecycle: string
-  account_type: string
+  account_lifecycle: number
+  account_type: number
   account_expiry_date?: Date | string | null
   password_last_changed?: Date | string | null
   password_expiry_time?: Date | string | null
   must_change_password?: boolean
   last_login_time?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
 }
 
 export type AccountCreateOrConnectWithoutAccount_role_lookupInput = {
@@ -880,16 +880,14 @@ export type AccountScalarWhereInput = {
   phone_number?: Prisma.StringNullableFilter<"Account"> | string | null
   email?: Prisma.StringNullableFilter<"Account"> | string | null
   attribute?: Prisma.JsonNullableFilter<"Account">
-  account_lifecycle?: Prisma.UuidFilter<"Account"> | string
-  account_type?: Prisma.UuidFilter<"Account"> | string
-  account_role?: Prisma.UuidNullableFilter<"Account"> | string | null
+  account_lifecycle?: Prisma.IntFilter<"Account"> | number
+  account_type?: Prisma.IntFilter<"Account"> | number
+  account_role?: Prisma.IntNullableFilter<"Account"> | number | null
   account_expiry_date?: Prisma.DateTimeNullableFilter<"Account"> | Date | string | null
   password_last_changed?: Prisma.DateTimeNullableFilter<"Account"> | Date | string | null
   password_expiry_time?: Prisma.DateTimeNullableFilter<"Account"> | Date | string | null
   must_change_password?: Prisma.BoolFilter<"Account"> | boolean
   last_login_time?: Prisma.DateTimeNullableFilter<"Account"> | Date | string | null
-  createdAt?: Prisma.DateTimeFilter<"Account"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Account"> | Date | string
 }
 
 export type AccountUpsertWithWhereUniqueWithoutAccount_type_lookupInput = {
@@ -932,15 +930,13 @@ export type AccountCreateManyAccount_lifecycle_lookupInput = {
   phone_number?: string | null
   email?: string | null
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  account_type: string
-  account_role?: string | null
+  account_type: number
+  account_role?: number | null
   account_expiry_date?: Date | string | null
   password_last_changed?: Date | string | null
   password_expiry_time?: Date | string | null
   must_change_password?: boolean
   last_login_time?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
 }
 
 export type AccountCreateManyAccount_type_lookupInput = {
@@ -951,15 +947,13 @@ export type AccountCreateManyAccount_type_lookupInput = {
   phone_number?: string | null
   email?: string | null
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  account_lifecycle: string
-  account_role?: string | null
+  account_lifecycle: number
+  account_role?: number | null
   account_expiry_date?: Date | string | null
   password_last_changed?: Date | string | null
   password_expiry_time?: Date | string | null
   must_change_password?: boolean
   last_login_time?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
 }
 
 export type AccountCreateManyAccount_role_lookupInput = {
@@ -970,15 +964,13 @@ export type AccountCreateManyAccount_role_lookupInput = {
   phone_number?: string | null
   email?: string | null
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  account_lifecycle: string
-  account_type: string
+  account_lifecycle: number
+  account_type: number
   account_expiry_date?: Date | string | null
   password_last_changed?: Date | string | null
   password_expiry_time?: Date | string | null
   must_change_password?: boolean
   last_login_time?: Date | string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
 }
 
 export type AccountUpdateWithoutAccount_lifecycle_lookupInput = {
@@ -994,8 +986,6 @@ export type AccountUpdateWithoutAccount_lifecycle_lookupInput = {
   password_expiry_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
   last_login_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   account_type_lookup?: Prisma.LookupUpdateOneRequiredWithoutAccounts_as_typeNestedInput
   account_role_lookup?: Prisma.LookupUpdateOneWithoutAccounts_as_roleNestedInput
 }
@@ -1008,15 +998,13 @@ export type AccountUncheckedUpdateWithoutAccount_lifecycle_lookupInput = {
   phone_number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  account_type?: Prisma.StringFieldUpdateOperationsInput | string
-  account_role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  account_type?: Prisma.IntFieldUpdateOperationsInput | number
+  account_role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   account_expiry_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password_last_changed?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password_expiry_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
   last_login_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AccountUncheckedUpdateManyWithoutAccount_lifecycle_lookupInput = {
@@ -1027,15 +1015,13 @@ export type AccountUncheckedUpdateManyWithoutAccount_lifecycle_lookupInput = {
   phone_number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  account_type?: Prisma.StringFieldUpdateOperationsInput | string
-  account_role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  account_type?: Prisma.IntFieldUpdateOperationsInput | number
+  account_role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   account_expiry_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password_last_changed?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password_expiry_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
   last_login_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AccountUpdateWithoutAccount_type_lookupInput = {
@@ -1051,8 +1037,6 @@ export type AccountUpdateWithoutAccount_type_lookupInput = {
   password_expiry_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
   last_login_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   account_lifecycle_lookup?: Prisma.LookupUpdateOneRequiredWithoutAccounts_as_lifecycleNestedInput
   account_role_lookup?: Prisma.LookupUpdateOneWithoutAccounts_as_roleNestedInput
 }
@@ -1065,15 +1049,13 @@ export type AccountUncheckedUpdateWithoutAccount_type_lookupInput = {
   phone_number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  account_lifecycle?: Prisma.StringFieldUpdateOperationsInput | string
-  account_role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  account_lifecycle?: Prisma.IntFieldUpdateOperationsInput | number
+  account_role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   account_expiry_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password_last_changed?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password_expiry_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
   last_login_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AccountUncheckedUpdateManyWithoutAccount_type_lookupInput = {
@@ -1084,15 +1066,13 @@ export type AccountUncheckedUpdateManyWithoutAccount_type_lookupInput = {
   phone_number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  account_lifecycle?: Prisma.StringFieldUpdateOperationsInput | string
-  account_role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  account_lifecycle?: Prisma.IntFieldUpdateOperationsInput | number
+  account_role?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   account_expiry_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password_last_changed?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password_expiry_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
   last_login_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AccountUpdateWithoutAccount_role_lookupInput = {
@@ -1108,8 +1088,6 @@ export type AccountUpdateWithoutAccount_role_lookupInput = {
   password_expiry_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
   last_login_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   account_lifecycle_lookup?: Prisma.LookupUpdateOneRequiredWithoutAccounts_as_lifecycleNestedInput
   account_type_lookup?: Prisma.LookupUpdateOneRequiredWithoutAccounts_as_typeNestedInput
 }
@@ -1122,15 +1100,13 @@ export type AccountUncheckedUpdateWithoutAccount_role_lookupInput = {
   phone_number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  account_lifecycle?: Prisma.StringFieldUpdateOperationsInput | string
-  account_type?: Prisma.StringFieldUpdateOperationsInput | string
+  account_lifecycle?: Prisma.IntFieldUpdateOperationsInput | number
+  account_type?: Prisma.IntFieldUpdateOperationsInput | number
   account_expiry_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password_last_changed?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password_expiry_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
   last_login_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type AccountUncheckedUpdateManyWithoutAccount_role_lookupInput = {
@@ -1141,15 +1117,13 @@ export type AccountUncheckedUpdateManyWithoutAccount_role_lookupInput = {
   phone_number?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
-  account_lifecycle?: Prisma.StringFieldUpdateOperationsInput | string
-  account_type?: Prisma.StringFieldUpdateOperationsInput | string
+  account_lifecycle?: Prisma.IntFieldUpdateOperationsInput | number
+  account_type?: Prisma.IntFieldUpdateOperationsInput | number
   account_expiry_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password_last_changed?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password_expiry_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
   last_login_time?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -1170,8 +1144,6 @@ export type AccountSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   password_expiry_time?: boolean
   must_change_password?: boolean
   last_login_time?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
   account_lifecycle_lookup?: boolean | Prisma.LookupDefaultArgs<ExtArgs>
   account_type_lookup?: boolean | Prisma.LookupDefaultArgs<ExtArgs>
   account_role_lookup?: boolean | Prisma.Account$account_role_lookupArgs<ExtArgs>
@@ -1193,8 +1165,6 @@ export type AccountSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   password_expiry_time?: boolean
   must_change_password?: boolean
   last_login_time?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
   account_lifecycle_lookup?: boolean | Prisma.LookupDefaultArgs<ExtArgs>
   account_type_lookup?: boolean | Prisma.LookupDefaultArgs<ExtArgs>
   account_role_lookup?: boolean | Prisma.Account$account_role_lookupArgs<ExtArgs>
@@ -1216,8 +1186,6 @@ export type AccountSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   password_expiry_time?: boolean
   must_change_password?: boolean
   last_login_time?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
   account_lifecycle_lookup?: boolean | Prisma.LookupDefaultArgs<ExtArgs>
   account_type_lookup?: boolean | Prisma.LookupDefaultArgs<ExtArgs>
   account_role_lookup?: boolean | Prisma.Account$account_role_lookupArgs<ExtArgs>
@@ -1239,11 +1207,9 @@ export type AccountSelectScalar = {
   password_expiry_time?: boolean
   must_change_password?: boolean
   last_login_time?: boolean
-  createdAt?: boolean
-  updatedAt?: boolean
 }
 
-export type AccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "username" | "password" | "full_name" | "phone_number" | "email" | "attribute" | "account_lifecycle" | "account_type" | "account_role" | "account_expiry_date" | "password_last_changed" | "password_expiry_time" | "must_change_password" | "last_login_time" | "createdAt" | "updatedAt", ExtArgs["result"]["account"]>
+export type AccountOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "username" | "password" | "full_name" | "phone_number" | "email" | "attribute" | "account_lifecycle" | "account_type" | "account_role" | "account_expiry_date" | "password_last_changed" | "password_expiry_time" | "must_change_password" | "last_login_time", ExtArgs["result"]["account"]>
 export type AccountInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   account_lifecycle_lookup?: boolean | Prisma.LookupDefaultArgs<ExtArgs>
   account_type_lookup?: boolean | Prisma.LookupDefaultArgs<ExtArgs>
@@ -1275,16 +1241,14 @@ export type $AccountPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     phone_number: string | null
     email: string | null
     attribute: runtime.JsonValue | null
-    account_lifecycle: string
-    account_type: string
-    account_role: string | null
+    account_lifecycle: number
+    account_type: number
+    account_role: number | null
     account_expiry_date: Date | null
     password_last_changed: Date | null
     password_expiry_time: Date | null
     must_change_password: boolean
     last_login_time: Date | null
-    createdAt: Date
-    updatedAt: Date
   }, ExtArgs["result"]["account"]>
   composites: {}
 }
@@ -1718,16 +1682,14 @@ export interface AccountFieldRefs {
   readonly phone_number: Prisma.FieldRef<"Account", 'String'>
   readonly email: Prisma.FieldRef<"Account", 'String'>
   readonly attribute: Prisma.FieldRef<"Account", 'Json'>
-  readonly account_lifecycle: Prisma.FieldRef<"Account", 'String'>
-  readonly account_type: Prisma.FieldRef<"Account", 'String'>
-  readonly account_role: Prisma.FieldRef<"Account", 'String'>
+  readonly account_lifecycle: Prisma.FieldRef<"Account", 'Int'>
+  readonly account_type: Prisma.FieldRef<"Account", 'Int'>
+  readonly account_role: Prisma.FieldRef<"Account", 'Int'>
   readonly account_expiry_date: Prisma.FieldRef<"Account", 'DateTime'>
   readonly password_last_changed: Prisma.FieldRef<"Account", 'DateTime'>
   readonly password_expiry_time: Prisma.FieldRef<"Account", 'DateTime'>
   readonly must_change_password: Prisma.FieldRef<"Account", 'Boolean'>
   readonly last_login_time: Prisma.FieldRef<"Account", 'DateTime'>
-  readonly createdAt: Prisma.FieldRef<"Account", 'DateTime'>
-  readonly updatedAt: Prisma.FieldRef<"Account", 'DateTime'>
 }
     
 

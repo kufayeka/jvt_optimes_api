@@ -27,15 +27,17 @@ export type AggregateLookup = {
 }
 
 export type LookupAvgAggregateOutputType = {
+  id: number | null
   sort_order: number | null
 }
 
 export type LookupSumAggregateOutputType = {
+  id: number | null
   sort_order: number | null
 }
 
 export type LookupMinAggregateOutputType = {
-  id: string | null
+  id: number | null
   lookup_type: string | null
   code: string | null
   label: string | null
@@ -45,7 +47,7 @@ export type LookupMinAggregateOutputType = {
 }
 
 export type LookupMaxAggregateOutputType = {
-  id: string | null
+  id: number | null
   lookup_type: string | null
   code: string | null
   label: string | null
@@ -68,10 +70,12 @@ export type LookupCountAggregateOutputType = {
 
 
 export type LookupAvgAggregateInputType = {
+  id?: true
   sort_order?: true
 }
 
 export type LookupSumAggregateInputType = {
+  id?: true
   sort_order?: true
 }
 
@@ -194,7 +198,7 @@ export type LookupGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 }
 
 export type LookupGroupByOutputType = {
-  id: string
+  id: number
   lookup_type: string
   code: string
   label: string
@@ -228,7 +232,7 @@ export type LookupWhereInput = {
   AND?: Prisma.LookupWhereInput | Prisma.LookupWhereInput[]
   OR?: Prisma.LookupWhereInput[]
   NOT?: Prisma.LookupWhereInput | Prisma.LookupWhereInput[]
-  id?: Prisma.UuidFilter<"Lookup"> | string
+  id?: Prisma.IntFilter<"Lookup"> | number
   lookup_type?: Prisma.StringFilter<"Lookup"> | string
   code?: Prisma.StringFilter<"Lookup"> | string
   label?: Prisma.StringFilter<"Lookup"> | string
@@ -256,7 +260,7 @@ export type LookupOrderByWithRelationInput = {
 }
 
 export type LookupWhereUniqueInput = Prisma.AtLeast<{
-  id?: string
+  id?: number
   lookup_type_code?: Prisma.LookupLookup_typeCodeCompoundUniqueInput
   AND?: Prisma.LookupWhereInput | Prisma.LookupWhereInput[]
   OR?: Prisma.LookupWhereInput[]
@@ -293,7 +297,7 @@ export type LookupScalarWhereWithAggregatesInput = {
   AND?: Prisma.LookupScalarWhereWithAggregatesInput | Prisma.LookupScalarWhereWithAggregatesInput[]
   OR?: Prisma.LookupScalarWhereWithAggregatesInput[]
   NOT?: Prisma.LookupScalarWhereWithAggregatesInput | Prisma.LookupScalarWhereWithAggregatesInput[]
-  id?: Prisma.UuidWithAggregatesFilter<"Lookup"> | string
+  id?: Prisma.IntWithAggregatesFilter<"Lookup"> | number
   lookup_type?: Prisma.StringWithAggregatesFilter<"Lookup"> | string
   code?: Prisma.StringWithAggregatesFilter<"Lookup"> | string
   label?: Prisma.StringWithAggregatesFilter<"Lookup"> | string
@@ -304,7 +308,6 @@ export type LookupScalarWhereWithAggregatesInput = {
 }
 
 export type LookupCreateInput = {
-  id?: string
   lookup_type: string
   code: string
   label: string
@@ -318,7 +321,7 @@ export type LookupCreateInput = {
 }
 
 export type LookupUncheckedCreateInput = {
-  id?: string
+  id?: number
   lookup_type: string
   code: string
   label: string
@@ -332,7 +335,6 @@ export type LookupUncheckedCreateInput = {
 }
 
 export type LookupUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   lookup_type?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
@@ -346,7 +348,7 @@ export type LookupUpdateInput = {
 }
 
 export type LookupUncheckedUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   lookup_type?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
@@ -360,7 +362,7 @@ export type LookupUncheckedUpdateInput = {
 }
 
 export type LookupCreateManyInput = {
-  id?: string
+  id?: number
   lookup_type: string
   code: string
   label: string
@@ -371,7 +373,6 @@ export type LookupCreateManyInput = {
 }
 
 export type LookupUpdateManyMutationInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   lookup_type?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
@@ -382,7 +383,7 @@ export type LookupUpdateManyMutationInput = {
 }
 
 export type LookupUncheckedUpdateManyInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   lookup_type?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
@@ -409,6 +410,7 @@ export type LookupCountOrderByAggregateInput = {
 }
 
 export type LookupAvgOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   sort_order?: Prisma.SortOrder
 }
 
@@ -433,6 +435,7 @@ export type LookupMinOrderByAggregateInput = {
 }
 
 export type LookupSumOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   sort_order?: Prisma.SortOrder
 }
 
@@ -444,6 +447,34 @@ export type LookupScalarRelationFilter = {
 export type LookupNullableScalarRelationFilter = {
   is?: Prisma.LookupWhereInput | null
   isNot?: Prisma.LookupWhereInput | null
+}
+
+export type StringFieldUpdateOperationsInput = {
+  set?: string
+}
+
+export type NullableStringFieldUpdateOperationsInput = {
+  set?: string | null
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type LookupCreateNestedOneWithoutAccounts_as_lifecycleInput = {
@@ -491,7 +522,6 @@ export type LookupUpdateOneWithoutAccounts_as_roleNestedInput = {
 }
 
 export type LookupCreateWithoutAccounts_as_lifecycleInput = {
-  id?: string
   lookup_type: string
   code: string
   label: string
@@ -504,7 +534,7 @@ export type LookupCreateWithoutAccounts_as_lifecycleInput = {
 }
 
 export type LookupUncheckedCreateWithoutAccounts_as_lifecycleInput = {
-  id?: string
+  id?: number
   lookup_type: string
   code: string
   label: string
@@ -522,7 +552,6 @@ export type LookupCreateOrConnectWithoutAccounts_as_lifecycleInput = {
 }
 
 export type LookupCreateWithoutAccounts_as_typeInput = {
-  id?: string
   lookup_type: string
   code: string
   label: string
@@ -535,7 +564,7 @@ export type LookupCreateWithoutAccounts_as_typeInput = {
 }
 
 export type LookupUncheckedCreateWithoutAccounts_as_typeInput = {
-  id?: string
+  id?: number
   lookup_type: string
   code: string
   label: string
@@ -553,7 +582,6 @@ export type LookupCreateOrConnectWithoutAccounts_as_typeInput = {
 }
 
 export type LookupCreateWithoutAccounts_as_roleInput = {
-  id?: string
   lookup_type: string
   code: string
   label: string
@@ -566,7 +594,7 @@ export type LookupCreateWithoutAccounts_as_roleInput = {
 }
 
 export type LookupUncheckedCreateWithoutAccounts_as_roleInput = {
-  id?: string
+  id?: number
   lookup_type: string
   code: string
   label: string
@@ -595,7 +623,6 @@ export type LookupUpdateToOneWithWhereWithoutAccounts_as_lifecycleInput = {
 }
 
 export type LookupUpdateWithoutAccounts_as_lifecycleInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   lookup_type?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
@@ -608,7 +635,7 @@ export type LookupUpdateWithoutAccounts_as_lifecycleInput = {
 }
 
 export type LookupUncheckedUpdateWithoutAccounts_as_lifecycleInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   lookup_type?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
@@ -632,7 +659,6 @@ export type LookupUpdateToOneWithWhereWithoutAccounts_as_typeInput = {
 }
 
 export type LookupUpdateWithoutAccounts_as_typeInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   lookup_type?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
@@ -645,7 +671,7 @@ export type LookupUpdateWithoutAccounts_as_typeInput = {
 }
 
 export type LookupUncheckedUpdateWithoutAccounts_as_typeInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   lookup_type?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
@@ -669,7 +695,6 @@ export type LookupUpdateToOneWithWhereWithoutAccounts_as_roleInput = {
 }
 
 export type LookupUpdateWithoutAccounts_as_roleInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
   lookup_type?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
@@ -682,7 +707,7 @@ export type LookupUpdateWithoutAccounts_as_roleInput = {
 }
 
 export type LookupUncheckedUpdateWithoutAccounts_as_roleInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
+  id?: Prisma.IntFieldUpdateOperationsInput | number
   lookup_type?: Prisma.StringFieldUpdateOperationsInput | string
   code?: Prisma.StringFieldUpdateOperationsInput | string
   label?: Prisma.StringFieldUpdateOperationsInput | string
@@ -809,7 +834,7 @@ export type $LookupPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     accounts_as_role: Prisma.$AccountPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: string
+    id: number
     lookup_type: string
     code: string
     label: string
@@ -1243,7 +1268,7 @@ export interface Prisma__LookupClient<T, Null = never, ExtArgs extends runtime.T
  * Fields of the Lookup model
  */
 export interface LookupFieldRefs {
-  readonly id: Prisma.FieldRef<"Lookup", 'String'>
+  readonly id: Prisma.FieldRef<"Lookup", 'Int'>
   readonly lookup_type: Prisma.FieldRef<"Lookup", 'String'>
   readonly code: Prisma.FieldRef<"Lookup", 'String'>
   readonly label: Prisma.FieldRef<"Lookup", 'String'>

@@ -28,7 +28,7 @@ export class LookupController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get lookup by id' })
-  @ApiParam({ name: 'id', description: 'Lookup _id (uuid)' })
+  @ApiParam({ name: 'id', description: 'Lookup id (uuid)' })
   @ApiOkResponse({ type: LookupResponseDto })
   findOne(@Param('id') id: string) {
     return this.svc.findOne(id);
@@ -44,7 +44,7 @@ export class LookupController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Replace an existing lookup' })
-  @ApiParam({ name: 'id', description: 'Lookup _id (uuid)' })
+  @ApiParam({ name: 'id', description: 'Lookup id (uuid)' })
   @ApiBody({ type: UpdateLookupDto })
   @ApiOkResponse({ type: LookupResponseDto })
   update(@Param('id') id: string, @Body() body: UpdateLookupDto) {
@@ -53,7 +53,7 @@ export class LookupController {
 
   @Patch(':id/activate')
   @ApiOperation({ summary: 'Activate or deactivate a lookup' })
-  @ApiParam({ name: 'id', description: 'Lookup _id (uuid)' })
+  @ApiParam({ name: 'id', description: 'Lookup id (uuid)' })
   @ApiBody({ schema: { properties: { is_active: { type: 'boolean' } } } })
   @ApiOkResponse({ type: LookupResponseDto })
   activate(@Param('id') id: string, @Body('is_active') is_active: boolean) {

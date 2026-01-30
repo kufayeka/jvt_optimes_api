@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "Lookup" (
-    "id" UUID NOT NULL,
+    "id" SERIAL NOT NULL,
     "lookup_type" VARCHAR(100) NOT NULL,
     "code" VARCHAR(50) NOT NULL,
     "label" VARCHAR(100) NOT NULL,

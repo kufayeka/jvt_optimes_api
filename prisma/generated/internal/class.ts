@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.0.0",
   "engineVersion": "0c19ccc313cf9911a90d99d2ac2eb0280c76c513",
   "activeProvider": "postgresql",
-  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"./generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel User {\n  id    Int     @id @default(autoincrement())\n  email String  @unique\n  name  String?\n  posts Post[]\n}\n\nmodel Post {\n  id        Int      @id @default(autoincrement())\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n  title     String\n  content   String?\n  published Boolean  @default(false)\n  viewCount Int      @default(0)\n  author    User?    @relation(fields: [authorId], references: [id])\n  authorId  Int?\n}\n\nmodel Lookup {\n  id          String  @id @default(uuid()) @db.Uuid\n  lookup_type String  @db.VarChar(100)\n  code        String  @db.VarChar(50)\n  label       String  @db.VarChar(100)\n  description String?\n  sort_order  Int?\n  is_active   Boolean @default(true)\n  attribute   Json?\n\n  // 🔁 opposite relations\n  accounts_as_lifecycle Account[] @relation(\"account_lifecycle_lookup\")\n  accounts_as_type      Account[] @relation(\"account_type_lookup\")\n  accounts_as_role      Account[] @relation(\"account_role_lookup\")\n\n  @@unique([lookup_type, code])\n  @@index([lookup_type])\n}\n\nmodel Account {\n  id           String  @id @default(uuid()) @db.Uuid\n  username     String  @unique @db.VarChar(50)\n  password     String  @db.VarChar(100)\n  full_name    String  @db.VarChar(100)\n  phone_number String? @db.VarChar(100)\n  email        String? @db.VarChar(100)\n  attribute    Json?\n\n  account_lifecycle        String @db.Uuid\n  account_lifecycle_lookup Lookup @relation(\"account_lifecycle_lookup\", fields: [account_lifecycle], references: [id])\n\n  account_type        String @db.Uuid\n  account_type_lookup Lookup @relation(\"account_type_lookup\", fields: [account_type], references: [id])\n\n  account_role        String? @db.Uuid\n  account_role_lookup Lookup? @relation(\"account_role_lookup\", fields: [account_role], references: [id])\n\n  account_expiry_date DateTime?\n\n  password_last_changed DateTime?\n  password_expiry_time  DateTime?\n  must_change_password  Boolean   @default(true)\n\n  last_login_time DateTime?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client\"\n  output   = \"./generated\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n\nmodel Lookup {\n  id          Int     @id @default(autoincrement())\n  lookup_type String  @db.VarChar(100)\n  code        String  @db.VarChar(50)\n  label       String  @db.VarChar(100)\n  description String?\n  sort_order  Int?\n  is_active   Boolean @default(true)\n  attribute   Json?\n\n  accounts_as_lifecycle Account[] @relation(\"account_lifecycle_lookup\")\n  accounts_as_type      Account[] @relation(\"account_type_lookup\")\n  accounts_as_role      Account[] @relation(\"account_role_lookup\")\n\n  @@unique([lookup_type, code])\n  @@index([lookup_type])\n}\n\nmodel Account {\n  id           String  @id @default(uuid()) @db.Uuid\n  username     String  @unique @db.VarChar(50)\n  password     String  @db.VarChar(100)\n  full_name    String  @db.VarChar(100)\n  phone_number String? @db.VarChar(100)\n  email        String? @db.VarChar(100)\n  attribute    Json?\n\n  account_lifecycle        Int\n  account_lifecycle_lookup Lookup @relation(\"account_lifecycle_lookup\", fields: [account_lifecycle], references: [id])\n\n  account_type        Int\n  account_type_lookup Lookup @relation(\"account_type_lookup\", fields: [account_type], references: [id])\n\n  account_role        Int?\n  account_role_lookup Lookup? @relation(\"account_role_lookup\", fields: [account_role], references: [id])\n\n  account_expiry_date DateTime?\n\n  password_last_changed DateTime?\n  password_expiry_time  DateTime?\n  must_change_password  Boolean   @default(true)\n\n  last_login_time DateTime?\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -28,7 +28,7 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"posts\",\"kind\":\"object\",\"type\":\"Post\",\"relationName\":\"PostToUser\"}],\"dbName\":null},\"Post\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"content\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"published\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"viewCount\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"author\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"PostToUser\"},{\"name\":\"authorId\",\"kind\":\"scalar\",\"type\":\"Int\"}],\"dbName\":null},\"Lookup\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"lookup_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"label\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sort_order\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"is_active\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"attribute\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"accounts_as_lifecycle\",\"kind\":\"object\",\"type\":\"Account\",\"relationName\":\"account_lifecycle_lookup\"},{\"name\":\"accounts_as_type\",\"kind\":\"object\",\"type\":\"Account\",\"relationName\":\"account_type_lookup\"},{\"name\":\"accounts_as_role\",\"kind\":\"object\",\"type\":\"Account\",\"relationName\":\"account_role_lookup\"}],\"dbName\":null},\"Account\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"full_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone_number\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"attribute\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"account_lifecycle\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"account_lifecycle_lookup\",\"kind\":\"object\",\"type\":\"Lookup\",\"relationName\":\"account_lifecycle_lookup\"},{\"name\":\"account_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"account_type_lookup\",\"kind\":\"object\",\"type\":\"Lookup\",\"relationName\":\"account_type_lookup\"},{\"name\":\"account_role\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"account_role_lookup\",\"kind\":\"object\",\"type\":\"Lookup\",\"relationName\":\"account_role_lookup\"},{\"name\":\"account_expiry_date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"password_last_changed\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"password_expiry_time\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"must_change_password\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"last_login_time\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Lookup\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"lookup_type\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"label\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sort_order\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"is_active\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"attribute\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"accounts_as_lifecycle\",\"kind\":\"object\",\"type\":\"Account\",\"relationName\":\"account_lifecycle_lookup\"},{\"name\":\"accounts_as_type\",\"kind\":\"object\",\"type\":\"Account\",\"relationName\":\"account_type_lookup\"},{\"name\":\"accounts_as_role\",\"kind\":\"object\",\"type\":\"Account\",\"relationName\":\"account_role_lookup\"}],\"dbName\":null},\"Account\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"full_name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"phone_number\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"attribute\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"account_lifecycle\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"account_lifecycle_lookup\",\"kind\":\"object\",\"type\":\"Lookup\",\"relationName\":\"account_lifecycle_lookup\"},{\"name\":\"account_type\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"account_type_lookup\",\"kind\":\"object\",\"type\":\"Lookup\",\"relationName\":\"account_type_lookup\"},{\"name\":\"account_role\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"account_role_lookup\",\"kind\":\"object\",\"type\":\"Lookup\",\"relationName\":\"account_role_lookup\"},{\"name\":\"account_expiry_date\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"password_last_changed\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"password_expiry_time\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"must_change_password\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"last_login_time\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
   const { Buffer } = await import('node:buffer')
@@ -58,8 +58,8 @@ export interface PrismaClientConstructor {
    * @example
    * ```
    * const prisma = new PrismaClient()
-   * // Fetch zero or more Users
-   * const users = await prisma.user.findMany()
+   * // Fetch zero or more Lookups
+   * const lookups = await prisma.lookup.findMany()
    * ```
    * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
@@ -80,8 +80,8 @@ export interface PrismaClientConstructor {
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more Users
- * const users = await prisma.user.findMany()
+ * // Fetch zero or more Lookups
+ * const lookups = await prisma.lookup.findMany()
  * ```
  * 
  * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client).
@@ -175,26 +175,6 @@ export interface PrismaClient<
   }>>
 
       /**
-   * `prisma.user`: Exposes CRUD operations for the **User** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Users
-    * const users = await prisma.user.findMany()
-    * ```
-    */
-  get user(): Prisma.UserDelegate<ExtArgs, { omit: OmitOpts }>;
-
-  /**
-   * `prisma.post`: Exposes CRUD operations for the **Post** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Posts
-    * const posts = await prisma.post.findMany()
-    * ```
-    */
-  get post(): Prisma.PostDelegate<ExtArgs, { omit: OmitOpts }>;
-
-  /**
    * `prisma.lookup`: Exposes CRUD operations for the **Lookup** model.
     * Example usage:
     * ```ts

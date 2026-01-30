@@ -19,11 +19,11 @@ export class CreateAccountDto {
   @ApiPropertyOptional({ example: { meta: 'value' } })
   attribute?: any;
 
-  @ApiProperty({ description: 'Lookup id for account_type (uuid). If WITH_EXPIRATION, account_expiry_date is required.' })
-  account_type: string;
+  @ApiProperty({ description: 'Lookup id for account_type (int). If WITH_EXPIRATION, account_expiry_date is required.' })
+  account_type: number;
 
-  @ApiPropertyOptional({ description: 'Lookup id for account_role (uuid)' })
-  account_role?: string;
+  @ApiProperty({ description: 'Lookup id for account_role (int)' })
+  account_role: number;
 
   @ApiPropertyOptional({ description: 'Required if account_type is WITH_EXPIRATION. Must be null for PERMANENT.', example: '2026-12-31T00:00:00.000Z' })
   account_expiry_date?: string;

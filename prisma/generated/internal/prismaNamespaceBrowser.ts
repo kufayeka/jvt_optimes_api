@@ -51,8 +51,6 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  User: 'User',
-  Post: 'Post',
   Lookup: 'Lookup',
   Account: 'Account'
 } as const
@@ -71,29 +69,6 @@ export const TransactionIsolationLevel = {
 } as const
 
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
-
-
-export const UserScalarFieldEnum = {
-  id: 'id',
-  email: 'email',
-  name: 'name'
-} as const
-
-export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
-
-
-export const PostScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  title: 'title',
-  content: 'content',
-  published: 'published',
-  viewCount: 'viewCount',
-  authorId: 'authorId'
-} as const
-
-export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
 
 
 export const LookupScalarFieldEnum = {
@@ -125,9 +100,7 @@ export const AccountScalarFieldEnum = {
   password_last_changed: 'password_last_changed',
   password_expiry_time: 'password_expiry_time',
   must_change_password: 'must_change_password',
-  last_login_time: 'last_login_time',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  last_login_time: 'last_login_time'
 } as const
 
 export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
@@ -157,14 +130,6 @@ export const QueryMode = {
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
-export const NullsOrder = {
-  first: 'first',
-  last: 'last'
-} as const
-
-export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
-
-
 export const JsonNullValueFilter = {
   DbNull: 'DbNull',
   JsonNull: 'JsonNull',
@@ -172,4 +137,12 @@ export const JsonNullValueFilter = {
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

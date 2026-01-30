@@ -6,6 +6,7 @@ import { ApiTags, ApiOperation, ApiBody, ApiOkResponse, ApiCreatedResponse, ApiP
 import { AccountResponseDto } from './dto/account-response.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { Request, Response } from 'express';
+import { EditRoleDto } from './dto/edit-role.dto';
 
 function parseCookie(req: Request) {
   const header = req.headers.cookie;
@@ -69,6 +70,7 @@ export class AccountController {
 
   @Post('logout')
   @ApiOperation({ summary: 'Logout (clears cookie accountId)' })
+
   logout(@Res({ passthrough: true }) res: Response) {
     res.clearCookie('accountId');
     return { ok: true };
@@ -96,7 +98,9 @@ export class AccountController {
 
   @Patch(':id/role')
   @ApiOperation({ summary: 'Edit account role' })
-  editRole(@Param('id') id: string, @Body('roleLookupId') roleLookupId: string) {
+  @ApiParam({ name: 'id', description: 'Account ID (UUID)' })
+  @ApiBody({ type: EditRoleDto })
+  editRole(@Param('id') id: string, @Body('roleLookupId') roleLookupId: number | string) {
     return this.svc.editRole(id, roleLookupId);
   }
 

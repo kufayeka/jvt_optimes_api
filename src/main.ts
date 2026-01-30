@@ -1,24 +1,31 @@
-import 'dotenv/config'
-import { NestFactory } from '@nestjs/core'
-import { AppModule } from './app.module'
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import 'dotenv/config';
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
-  app.enableShutdownHooks()
+  const app = await NestFactory.create(AppModule);
 
-  app.setGlobalPrefix('api')
+  app.enableCors({
+    origin: ['http://192.168.68.99:3333', 'http://localhost:3333'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  });
+
+  app.enableShutdownHooks();
+
+  app.setGlobalPrefix('api');
 
   const config = new DocumentBuilder()
     .setTitle('Optimes NEST API')
     .setDescription('OptiMES API documentation')
     .setVersion('1.0')
-    .build()
+    .build();
 
-  const document = SwaggerModule.createDocument(app, config)
-  SwaggerModule.setup('docs', app, document)
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, document);
 
-  await app.listen(2000)
+  await app.listen(2000);
 }
 
-bootstrap()
+bootstrap();
