@@ -54,6 +54,20 @@ export class AccountController {
     return this.svc.getAll();
   }
 
+  @Get('validate')
+  @ApiOperation({ summary: 'Validate cookie and return account' })
+  @ApiOkResponse({ type: AccountValidateResponseDto })
+  @ApiBadRequestResponse({ type: ApiErrorResponseDto, description: 'Invalid UUID format' })
+  @ApiUnauthorizedResponse({ type: ApiErrorResponseDto, description: 'Invalid or missing cookie' })
+  @Serialize(AccountValidateResponseDto)
+  async validate(@Req() req: Request) {
+    const cookies = parseCookie(req);
+    const id = cookies['accountId'];
+    console.log('Validating accountId from cookie:', id);
+    if (!id) throw new UnauthorizedException('accountId cookie not present');
+    return this.svc.validateCookie(id);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get account by id (password excluded)' })
   @ApiParam({ name: 'id' })
@@ -126,19 +140,6 @@ export class AccountController {
   logout(@Res({ passthrough: true }) res: Response) {
     res.clearCookie('accountId');
     return { ok: true };
-  }
-
-  @Get('validate')
-  @ApiOperation({ summary: 'Validate cookie and return account' })
-  @ApiOkResponse({ type: AccountValidateResponseDto })
-  @ApiBadRequestResponse({ type: ApiErrorResponseDto, description: 'Invalid UUID format' })
-  @ApiUnauthorizedResponse({ type: ApiErrorResponseDto, description: 'Invalid or missing cookie' })
-  @Serialize(AccountValidateResponseDto)
-  async validate(@Req() req: Request) {
-    const cookies = parseCookie(req);
-    const id = cookies['accountId'];
-    if (!id) throw new UnauthorizedException('accountId cookie not present');
-    return this.svc.validateCookie(id);
   }
 
   @Post(':id/reset-password')
