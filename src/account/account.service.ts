@@ -80,7 +80,7 @@ export class AccountService {
 
   private async resolveAccountType(account_type: string | number) {
     const id = typeof account_type === 'string' ? parseInt(account_type, 10) : account_type;
-    const acctType = await this.prisma.lookup.findUnique({ where: { id } });
+    const acctType = await this.prisma.lookup.findUnique({ where: { lookup_type: 'ACCOUNT_TYPE', id } });
     if (!acctType) {
       throw new BadRequestException({
         message: 'Validation failed',
@@ -88,6 +88,18 @@ export class AccountService {
       });
     }
     return acctType;
+  }
+
+  private async resolveAccountRole(account_role: string | number) {
+    const id = typeof account_role === 'string' ? parseInt(account_role, 10) : account_role;
+    const role = await this.prisma.lookup.findUnique({ where: { lookup_type: 'ACCOUNT_ROLE', id } });
+    if (!role) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [{ field: 'account_role', message: 'account_role lookup not found' }],
+      });
+    }
+    return role;
   }
 
   private async resolveAccountWithLookups(username: string) {
@@ -137,6 +149,11 @@ export class AccountService {
 
     // check account_type lookup exists
     const acctType = await this.resolveAccountType(data.account_type);
+
+    // if account_role provided, check lookup exists
+    if (data.account_role !== undefined && data.account_role !== null) {
+      await this.resolveAccountRole(data.account_role);
+    }
 
     // if type is WITH_EXPIRATION require account_expiry_date
     if (acctType.code === 'WITH_EXPIRATION' && !data.account_expiry_date) {
