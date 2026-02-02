@@ -1,7 +1,9 @@
-import { Injectable, BadRequestException, NotFoundException, ForbiddenException, UnauthorizedException } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException, ForbiddenException, UnauthorizedException, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import * as yup from 'yup';
 import * as bcrypt from 'bcrypt';
+import { buildValidationDetails } from '../common/utils/validation';
+import { validate as uuidValidate } from 'uuid';
 
 const USERNAME_REGEX = /^[a-z][a-z0-9_]{3,19}$/;
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()_+\-=[\]{}|;:,.<>])[A-Za-z\d@$!%*?&#^()_+\-=[\]{}|;:,.<>]{12,}$/;
@@ -19,6 +21,12 @@ export class AccountService {
   }
 
   async getById(id: string) {
+    if (!uuidValidate(id)) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [{ field: 'id', message: 'Invalid UUID format' }],
+      });
+    }
     const acc = await this.prisma.account.findUnique({ where: { id: id }, include: { account_lifecycle_lookup: true, account_type_lookup: true, account_role_lookup: true } });
     if (!acc) throw new NotFoundException('Account not found');
     return this.formatAccount(acc as any);
@@ -26,14 +34,14 @@ export class AccountService {
 
   private createValidationSchema() {
     return yup.object({
-      username: yup.string().matches(USERNAME_REGEX).required(),
-      full_name: yup.string().required(),
+      username: yup.string().required('username is required').matches(USERNAME_REGEX, 'username format is invalid'),
+      full_name: yup.string().required('full_name is required'),
       phone_number: yup.string().optional(),
-      email: yup.string().email().optional(),
+      email: yup.string().email('email must be a valid email').optional(),
       attribute: yup.mixed().optional(),
-      account_type: yup.string().required(),
-      account_role: yup.string().required(),
-      account_expiry_date: yup.date().optional(),
+      account_type: yup.mixed().required('account_type is required'),
+      account_role: yup.mixed().required('account_role is required'),
+      account_expiry_date: yup.date().optional().nullable(),
     });
   }
 
@@ -61,14 +69,24 @@ export class AccountService {
     const lifecycle = await this.prisma.lookup.findFirst({
       where: { lookup_type: 'ACCOUNT_LIFECYCLE', code },
     });
-    if (!lifecycle) throw new BadRequestException(`ACCOUNT_LIFECYCLE ${code} not seeded`);
+    if (!lifecycle) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [{ field: 'account_lifecycle', message: `ACCOUNT_LIFECYCLE ${code} not seeded` }],
+      });
+    }
     return lifecycle;
   }
 
   private async resolveAccountType(account_type: string | number) {
     const id = typeof account_type === 'string' ? parseInt(account_type, 10) : account_type;
     const acctType = await this.prisma.lookup.findUnique({ where: { id } });
-    if (!acctType) throw new BadRequestException('account_type lookup not found');
+    if (!acctType) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [{ field: 'account_type', message: 'account_type lookup not found' }],
+      });
+    }
     return acctType;
   }
 
@@ -105,30 +123,42 @@ export class AccountService {
   async add(data: any) {
     const schema = this.createValidationSchema();
     try {
-      await schema.validate(data);
+      await schema.validate(data, { abortEarly: false });
     } catch (e) {
-      throw new BadRequestException(e.message);
+      throw new BadRequestException({ message: 'Validation failed', details: buildValidationDetails(e) });
     }
 
     // username unique check
     const existing = await this.prisma.account.findUnique({ where: { username: data.username } });
-    if (existing) throw new BadRequestException('Username already exists');
+    if (existing) throw new ConflictException({
+      message: 'Username already exists',
+      details: [{ field: 'username', message: 'Username already exists' }],
+    });
 
     // check account_type lookup exists
     const acctType = await this.resolveAccountType(data.account_type);
 
     // if type is WITH_EXPIRATION require account_expiry_date
     if (acctType.code === 'WITH_EXPIRATION' && !data.account_expiry_date) {
-      throw new BadRequestException('account_expiry_date is required for WITH_EXPIRATION accounts');
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [{ field: 'account_expiry_date', message: 'account_expiry_date is required for WITH_EXPIRATION accounts' }],
+      });
     }
     if (acctType.code === 'PERMANENT' && data.account_expiry_date) {
-      throw new BadRequestException('account_expiry_date must be null for PERMANENT accounts');
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [{ field: 'account_expiry_date', message: 'account_expiry_date must be null for PERMANENT accounts' }],
+      });
     }
 
     // system-generated initial password
     const generatedPassword = this.generatePassword();
     if (!PASSWORD_REGEX.test(generatedPassword)) {
-      throw new BadRequestException('Failed to generate a valid initial password');
+      throw new BadRequestException({
+        message: 'Password generation failed',
+        details: [{ field: 'password', message: 'Failed to generate a valid initial password' }],
+      });
     }
     const hashed = await bcrypt.hash(generatedPassword, 12);
 
@@ -174,7 +204,18 @@ export class AccountService {
   }
 
   async resetPassword(id: string, newPassword: string) {
-    if (!PASSWORD_REGEX.test(newPassword)) throw new BadRequestException('Password does not meet complexity rules');
+    if (!uuidValidate(id)) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [{ field: 'id', message: 'Invalid UUID format' }],
+      });
+    }
+    if (!PASSWORD_REGEX.test(newPassword)) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [{ field: 'newPassword', message: 'Password does not meet complexity rules' }],
+      });
+    }
     const acc = await this.prisma.account.findUnique({ where: { id: id } });
     if (!acc) throw new NotFoundException('Account not found');
     if ((acc as any).account_lifecycle === (await this.resolveLifecycle('DELETED')).id) {
@@ -203,15 +244,32 @@ export class AccountService {
   }
 
   async editRole(id: string, roleLookupId: number | string) {
+    if (!uuidValidate(id)) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [{ field: 'id', message: 'Invalid UUID format' }],
+      });
+    }
     const roleId = typeof roleLookupId === 'string' ? parseInt(roleLookupId, 10) : roleLookupId;
     const role = await this.prisma.lookup.findUnique({ where: { id: roleId } });
-    if (!role) throw new BadRequestException('Role lookup not found');
+    if (!role) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [{ field: 'roleLookupId', message: 'Role lookup not found' }],
+      });
+    }
     await this.prisma.account.update({ where: { id: id }, data: { account_role: roleId } });
     const acc = await this.prisma.account.findUnique({ where: { id }, include: { account_lifecycle_lookup: true, account_type_lookup: true, account_role_lookup: true } });
     return this.formatAccount(acc);
   }
 
   async setLifecycle(id: string, lifecycleCode: string) {
+    if (!uuidValidate(id)) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [{ field: 'id', message: 'Invalid UUID format' }],
+      });
+    }
     const lifecycle = await this.resolveLifecycle(lifecycleCode);
     await this.prisma.account.update({ where: { id: id }, data: { account_lifecycle: lifecycle.id } });
     const acc = await this.prisma.account.findUnique({ where: { id }, include: { account_lifecycle_lookup: true, account_type_lookup: true, account_role_lookup: true } });
@@ -219,10 +277,22 @@ export class AccountService {
   }
 
   async softDelete(id: string) {
+    if (!uuidValidate(id)) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [{ field: 'id', message: 'Invalid UUID format' }],
+      });
+    }
     return this.setLifecycle(id, 'DELETED');
   }
 
   async validateCookie(id: string) {
+    if (!uuidValidate(id)) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [{ field: 'id', message: 'Invalid UUID format' }],
+      });
+    }
     const acc = await this.prisma.account.findUnique({
       where: { id },
       include: { account_lifecycle_lookup: true, account_type_lookup: true },

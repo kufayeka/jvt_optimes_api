@@ -13,14 +13,11 @@ git clone https://github.com/kufayeka/jvt_optimes_api
 Then, navigate into the project directory:
 
 ```
-cd jvt_optimes_api
+cd ./jvt_optimes_api
 ```
 
 Install npm dependencies:
 
-```
-cd ./jvt_optimes_api
-```
 ```
 npm install
 ```
