@@ -19,6 +19,7 @@ import { AccountResponseDto } from './dto/account-response.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { Request, Response } from 'express';
 import { EditRoleDto } from './dto/edit-role.dto';
+import { EditAccountDto } from './dto/edit-account.dto';
 import { Serialize } from '../common/decorators/serialize.decorator';
 import { ApiErrorResponseDto } from '../common/dto/api-error-response.dto';
 import { OkResponseDto } from '../common/dto/ok-response.dto';
@@ -30,6 +31,7 @@ import { AccountLoginResponseDto } from './dto/account-login-response.dto';
 import { AccountValidateResponseDto } from './dto/account-validate-response.dto';
 import { AccountResetPasswordResponseDto } from './dto/account-reset-password-response.dto';
 import { AccountEditRoleResponseDto } from './dto/account-edit-role-response.dto';
+import { AccountEditResponseDto } from './dto/account-edit-response.dto';
 import { AccountLifecycleResponseDto } from './dto/account-lifecycle-response.dto';
 import { AccountDeleteResponseDto } from './dto/account-delete-response.dto';
 
@@ -186,8 +188,43 @@ export class AccountController {
     },
   })
   @Serialize(AccountEditRoleResponseDto)
-  editRole(@Param('id') id: string, @Body('roleLookupId') roleLookupId: number | string) {
-    return this.svc.editRole(id, roleLookupId);
+  editRole(@Param('id') id: string, @Body() body: EditRoleDto) {
+    return this.svc.editRole(id, body.roleLookupId);
+  }
+
+  @Patch(':id')
+  @ApiOperation({ summary: 'Edit account (username, full_name, phone_number, email, attribute)' })
+  @ApiParam({ name: 'id', description: 'Account ID (UUID)' })
+  @ApiBody({ type: EditAccountDto })
+  @ApiOkResponse({ type: AccountEditResponseDto })
+  @ApiBadRequestResponse({
+    type: ApiErrorResponseDto,
+    description: 'Invalid UUID format or validation failed',
+    schema: {
+      example: {
+        statusCode: 400,
+        error: 'Bad Request',
+        message: 'Validation failed',
+        details: [{ field: 'id', message: 'Invalid UUID format' }],
+      },
+    },
+  })
+  @ApiConflictResponse({
+    type: ApiErrorResponseDto,
+    description: 'Username already exists',
+    schema: {
+      example: {
+        statusCode: 409,
+        error: 'Conflict',
+        message: 'Username already exists',
+        details: [{ field: 'username', message: 'Username already exists' }],
+      },
+    },
+  })
+  @ApiNotFoundResponse({ type: ApiErrorResponseDto, description: 'Account not found' })
+  @Serialize(AccountEditResponseDto)
+  editAccount(@Param('id') id: string, @Body() body: EditAccountDto) {
+    return this.svc.editAccount(id, body as any);
   }
 
   @Patch(':id/disable')

@@ -27,4 +27,7 @@ export class CreateAccountDto {
 
   @ApiPropertyOptional({ description: 'Required if account_type is WITH_EXPIRATION. Must be null for PERMANENT.', example: '2026-12-31T00:00:00.000Z' })
   account_expiry_date?: string;
+
+  @ApiPropertyOptional({ example: '2026-01-01T00:00:00.000Z' })
+  password_expiry_time: string | null;
 }

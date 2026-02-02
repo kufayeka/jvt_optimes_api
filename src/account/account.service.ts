@@ -42,6 +42,7 @@ export class AccountService {
       account_type: yup.mixed().required('account_type is required'),
       account_role: yup.mixed().required('account_role is required'),
       account_expiry_date: yup.date().optional().nullable(),
+      password_expiry_time: yup.date().required('password_expiry_time is required'),
     });
   }
 
@@ -189,6 +190,7 @@ export class AccountService {
       account_type: typeof data.account_type === 'string' ? parseInt(data.account_type, 10) : data.account_type,
       account_role: data.account_role ? (typeof data.account_role === 'string' ? parseInt(data.account_role, 10) : data.account_role) : null,
       account_expiry_date: data.account_expiry_date ? new Date(data.account_expiry_date) : null,
+      password_expiry_time: data.password_expiry_time ? new Date(data.password_expiry_time) : null,
       must_change_password: true,
       password_last_changed: null,
     };
@@ -211,6 +213,10 @@ export class AccountService {
     if (acc.account_lifecycle_lookup?.code === 'DELETED') throw new NotFoundException('Account not found');
     if (acc.account_lifecycle_lookup?.code === 'DISABLED') throw new ForbiddenException('Account disabled');
     if (acc.account_lifecycle_lookup?.code === 'EXPIRED') throw new ForbiddenException('Account expired');
+
+    if (acc.password_expiry_time && new Date(acc.password_expiry_time).getTime() <= Date.now()) {
+      throw new ForbiddenException('Password expired');
+    }
 
     const match = await bcrypt.compare(password, acc.password);
     if (!match) throw new UnauthorizedException('Invalid credentials');
@@ -258,6 +264,63 @@ export class AccountService {
     });
       const freshAccount = await this.prisma.account.findUnique({ where: { id: updatedAccount.id }, include: { account_lifecycle_lookup: true, account_type_lookup: true, account_role_lookup: true } });
       return this.formatAccount(freshAccount);
+  }
+
+  async editAccount(id: string, data: any) {
+    if (!uuidValidate(id)) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [{ field: 'id', message: 'Invalid UUID format' }],
+      });
+    }
+
+    const schema = yup.object({
+      username: yup.string().matches(USERNAME_REGEX, 'username format is invalid').optional(),
+      full_name: yup.string().optional(),
+      phone_number: yup.string().nullable().optional(),
+      email: yup.string().email('email must be a valid email').nullable().optional(),
+      attribute: yup.mixed().nullable().optional(),
+    });
+
+    try {
+      await schema.validate(data, { abortEarly: false });
+    } catch (e) {
+      throw new BadRequestException({ message: 'Validation failed', details: buildValidationDetails(e) });
+    }
+
+    if (!data || Object.keys(data).length === 0) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [{ field: 'body', message: 'At least one field must be provided' }],
+      });
+    }
+
+    const current = await this.prisma.account.findUnique({ where: { id } });
+    if (!current) throw new NotFoundException('Account not found');
+    if ((current as any).account_lifecycle === (await this.resolveLifecycle('DELETED')).id) {
+      throw new NotFoundException('Account not found');
+    }
+
+    if (data.username) {
+      const existing = await this.prisma.account.findUnique({ where: { username: data.username } });
+      if (existing && existing.id !== id) {
+        throw new ConflictException({
+          message: 'Username already exists',
+          details: [{ field: 'username', message: 'Username already exists' }],
+        });
+      }
+    }
+
+    const updateData: any = {};
+    if (Object.prototype.hasOwnProperty.call(data, 'username')) updateData.username = data.username;
+    if (Object.prototype.hasOwnProperty.call(data, 'full_name')) updateData.full_name = data.full_name;
+    if (Object.prototype.hasOwnProperty.call(data, 'phone_number')) updateData.phone_number = data.phone_number;
+    if (Object.prototype.hasOwnProperty.call(data, 'email')) updateData.email = data.email;
+    if (Object.prototype.hasOwnProperty.call(data, 'attribute')) updateData.attribute = data.attribute;
+
+    const updated = await this.prisma.account.update({ where: { id }, data: updateData });
+    const acc = await this.prisma.account.findUnique({ where: { id: updated.id }, include: { account_lifecycle_lookup: true, account_type_lookup: true, account_role_lookup: true } });
+    return this.formatAccount(acc);
   }
 
   async editRole(id: string, roleLookupId: number | string) {
