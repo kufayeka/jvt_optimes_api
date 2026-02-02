@@ -386,7 +386,7 @@ export class AccountService {
     return this.formatAccount(acc);
   }
 
-  async editRole(id: string, roleLookupId: number | string) {
+  async editRole(id: string, roleLookupId: string) {
     if (!uuidValidate(id)) {
       throw new BadRequestException({
         message: 'Validation failed',
