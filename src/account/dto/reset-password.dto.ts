@@ -2,8 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class ResetPasswordDto {
   @ApiProperty({
-    example: 'Very$ecureP@ssw0rd!',
-    description: 'Password complexity: min 12 chars, upper/lower/number/symbol. Regex: ^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()_+\-=[\]{}|;:,.<>])[A-Za-z\d@$!%*?&#^()_+\-=[\]{}|;:,.<>]{12,}$',
+    example: '2026-06-30T00:00:00.000Z',
+    description: 'Password expiry time (ISO). Can be set by system/admin.',
   })
-  newPassword: string;
+  password_expiry_time: string;
 }

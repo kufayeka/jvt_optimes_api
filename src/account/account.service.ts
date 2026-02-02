@@ -8,6 +8,7 @@ import { validate as uuidValidate } from 'uuid';
 const USERNAME_REGEX = /^[a-z][a-z0-9_]{3,19}$/;
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()_+\-=[\]{}|;:,.<>])[A-Za-z\d@$!%*?&#^()_+\-=[\]{}|;:,.<>]{12,}$/;
 const SYMBOLS = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+const PASSWORD_EXPIRY_MONTHS = 3;
 
 @Injectable()
 export class AccountService {
@@ -15,6 +16,7 @@ export class AccountService {
 
   async getAll() {
     const rows = await this.prisma.account.findMany({
+      where: { account_lifecycle_lookup: { code: { not: 'DELETED' } } },
       include: { account_lifecycle_lookup: true, account_type_lookup: true, account_role_lookup: true },
      });
     return rows.map((r: any) => this.formatAccount(r as any));
@@ -226,7 +228,62 @@ export class AccountService {
     return this.formatAccount(acc);
   }
 
-  async resetPassword(id: string, newPassword: string) {
+  async resetPassword(id: string, passwordExpiryTime: string) {
+    if (!uuidValidate(id)) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [{ field: 'id', message: 'Invalid UUID format' }],
+      });
+    }
+    const expiryDate = new Date(passwordExpiryTime);
+    if (!passwordExpiryTime || isNaN(expiryDate.getTime())) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [{ field: 'password_expiry_time', message: 'password_expiry_time must be a valid ISO date' }],
+      });
+    }
+    if (expiryDate.getTime() <= Date.now()) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [{ field: 'password_expiry_time', message: 'password_expiry_time must be in the future' }],
+      });
+    }
+    const acc = await this.prisma.account.findUnique({ where: { id: id } });
+    if (!acc) throw new NotFoundException('Account not found');
+    if ((acc as any).account_lifecycle === (await this.resolveLifecycle('DELETED')).id) {
+      throw new NotFoundException('Account not found');
+    }
+    const generatedPassword = this.generatePassword();
+    if (!PASSWORD_REGEX.test(generatedPassword)) {
+      throw new BadRequestException({
+        message: 'Password generation failed',
+        details: [{ field: 'password', message: 'Failed to generate a valid password' }],
+      });
+    }
+    const hashed = await bcrypt.hash(generatedPassword, 12);
+    const updateData: any = {
+      password: hashed,
+      must_change_password: true,
+      password_last_changed: null,
+      password_expiry_time: expiryDate,
+    };
+
+    const updatedAccount = await this.prisma.account.update({
+      where: { id: id },
+      data: updateData,
+    });
+    const freshAccount = await this.prisma.account.findUnique({ where: { id: updatedAccount.id }, include: { account_lifecycle_lookup: true, account_type_lookup: true, account_role_lookup: true } });
+    const expiryTime = new Date(updateData.password_expiry_time);
+    const expiresInDays = Math.max(0, Math.ceil((expiryTime.getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
+    return {
+      account: this.formatAccount(freshAccount),
+      initial_password: generatedPassword,
+      password_expiry_time: expiryTime.toISOString(),
+      expires_in_days: expiresInDays,
+    };
+  }
+
+  async changePassword(id: string, newPassword: string) {
     if (!uuidValidate(id)) {
       throw new BadRequestException({
         message: 'Validation failed',
@@ -239,31 +296,37 @@ export class AccountService {
         details: [{ field: 'newPassword', message: 'Password does not meet complexity rules' }],
       });
     }
+
     const acc = await this.prisma.account.findUnique({ where: { id: id } });
     if (!acc) throw new NotFoundException('Account not found');
     if ((acc as any).account_lifecycle === (await this.resolveLifecycle('DELETED')).id) {
       throw new NotFoundException('Account not found');
     }
+
     const hashed = await bcrypt.hash(newPassword, 12);
+    const now = new Date();
+    const expiry = new Date(now);
+    expiry.setMonth(expiry.getMonth() + PASSWORD_EXPIRY_MONTHS);
+
     const updateData: any = {
       password: hashed,
       must_change_password: false,
-      password_last_changed: new Date(),
+      password_last_changed: now,
+      password_expiry_time: expiry,
     };
 
-    // If CREATED -> ACTIVE after password change
     const createdLifecycle = await this.resolveLifecycle('CREATED');
     if (acc.account_lifecycle === createdLifecycle.id) {
       const activeLifecycle = await this.resolveLifecycle('ACTIVE');
       updateData.account_lifecycle = activeLifecycle.id;
     }
 
-      const updatedAccount = await this.prisma.account.update({
+    const updatedAccount = await this.prisma.account.update({
       where: { id: id },
       data: updateData,
     });
-      const freshAccount = await this.prisma.account.findUnique({ where: { id: updatedAccount.id }, include: { account_lifecycle_lookup: true, account_type_lookup: true, account_role_lookup: true } });
-      return this.formatAccount(freshAccount);
+    const freshAccount = await this.prisma.account.findUnique({ where: { id: updatedAccount.id }, include: { account_lifecycle_lookup: true, account_type_lookup: true, account_role_lookup: true } });
+    return this.formatAccount(freshAccount);
   }
 
   async editAccount(id: string, data: any) {

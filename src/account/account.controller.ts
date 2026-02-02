@@ -30,6 +30,8 @@ import { AccountGetResponseDto } from './dto/account-get-response.dto';
 import { AccountLoginResponseDto } from './dto/account-login-response.dto';
 import { AccountValidateResponseDto } from './dto/account-validate-response.dto';
 import { AccountResetPasswordResponseDto } from './dto/account-reset-password-response.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
+import { AccountChangePasswordResponseDto } from './dto/account-change-password-response.dto';
 import { AccountEditRoleResponseDto } from './dto/account-edit-role-response.dto';
 import { AccountEditResponseDto } from './dto/account-edit-response.dto';
 import { AccountLifecycleResponseDto } from './dto/account-lifecycle-response.dto';
@@ -146,12 +148,38 @@ export class AccountController {
 
   @Post(':id/reset-password')
   @ApiOperation({
-    summary: 'Reset password (admin or self)',
-    description: 'If lifecycle=CREATED and password change succeeds, lifecycle becomes ACTIVE; must_change_password=false; password_last_changed set.',
+    summary: 'Reset password (system-generated)',
+    description: 'System generates a new password and sets password_expiry_time. Response includes the new password and expiry info.',
   })
   @ApiParam({ name: 'id', description: 'Account ID (UUID)' })
   @ApiBody({ type: ResetPasswordDto })
   @ApiOkResponse({ type: AccountResetPasswordResponseDto })
+  @ApiBadRequestResponse({
+    type: ApiErrorResponseDto,
+    description: 'Invalid UUID format or password_expiry_time invalid',
+    schema: {
+      example: {
+        statusCode: 400,
+        error: 'Bad Request',
+        message: 'Validation failed',
+        details: [{ field: 'password_expiry_time', message: 'password_expiry_time must be a valid ISO date' }],
+      },
+    },
+  })
+  @ApiNotFoundResponse({ type: ApiErrorResponseDto, description: 'Account not found' })
+  @Serialize(AccountResetPasswordResponseDto)
+  resetPassword(@Param('id') id: string, @Body() body: ResetPasswordDto) {
+    return this.svc.resetPassword(id, body.password_expiry_time);
+  }
+
+  @Post(':id/change-password')
+  @ApiOperation({
+    summary: 'Change password (user-defined)',
+    description: 'New password must follow SOP. password_expiry_time is set to 3 months from now.',
+  })
+  @ApiParam({ name: 'id', description: 'Account ID (UUID)' })
+  @ApiBody({ type: ChangePasswordDto })
+  @ApiOkResponse({ type: AccountChangePasswordResponseDto })
   @ApiBadRequestResponse({
     type: ApiErrorResponseDto,
     description: 'Invalid UUID format or password complexity failed',
@@ -160,14 +188,14 @@ export class AccountController {
         statusCode: 400,
         error: 'Bad Request',
         message: 'Validation failed',
-        details: [{ field: 'id', message: 'Invalid UUID format' }],
+        details: [{ field: 'newPassword', message: 'Password does not meet complexity rules' }],
       },
     },
   })
   @ApiNotFoundResponse({ type: ApiErrorResponseDto, description: 'Account not found' })
-  @Serialize(AccountResetPasswordResponseDto)
-  resetPassword(@Param('id') id: string, @Body() body: ResetPasswordDto) {
-    return this.svc.resetPassword(id, body.newPassword);
+  @Serialize(AccountChangePasswordResponseDto)
+  changePassword(@Param('id') id: string, @Body() body: ChangePasswordDto) {
+    return this.svc.changePassword(id, body.newPassword);
   }
 
   @Patch(':id/role')
