@@ -22,6 +22,49 @@ export class AccountService {
     return rows.map((r: any) => this.formatAccount(r as any));
   }
 
+  async getDashboard() {
+    const lifecycles = await this.prisma.lookup.findMany({
+      where: { lookup_type: 'ACCOUNT_LIFECYCLE' },
+      select: { id: true, code: true },
+    });
+    const idToCode = new Map<number, string>();
+    lifecycles.forEach((l) => idToCode.set(l.id, l.code));
+
+    const grouped = await this.prisma.account.groupBy({
+      by: ['account_lifecycle'],
+      _count: { _all: true },
+    });
+
+    const counts: Record<string, number> = {};
+    let total = 0;
+    grouped.forEach((g) => {
+      const code = idToCode.get(g.account_lifecycle) || 'OTHER';
+      const count = g._count._all;
+      counts[code] = (counts[code] || 0) + count;
+      total += count;
+    });
+
+    const active = counts.ACTIVE || 0;
+    const disabled = counts.DISABLED || 0;
+    const created = counts.CREATED || 0;
+    const expired = counts.EXPIRED || 0;
+    const deleted = counts.DELETED || 0;
+
+    const knownTotal = active + disabled + created + expired + deleted;
+    const other = Math.max(0, total - knownTotal);
+
+    return {
+      total,
+      active,
+      disabled,
+      created,
+      expired,
+      deleted,
+      other,
+      generated_at: new Date().toISOString(),
+    };
+  }
+
   async getById(id: string) {
     if (!uuidValidate(id)) {
       throw new BadRequestException({
@@ -283,7 +326,7 @@ export class AccountService {
     };
   }
 
-  async changePassword(id: string, newPassword: string) {
+  async changePassword(id: string, currentPassword: string, newPassword: string) {
     if (!uuidValidate(id)) {
       throw new BadRequestException({
         message: 'Validation failed',
@@ -302,6 +345,9 @@ export class AccountService {
     if ((acc as any).account_lifecycle === (await this.resolveLifecycle('DELETED')).id) {
       throw new NotFoundException('Account not found');
     }
+
+    const currentMatch = await bcrypt.compare(currentPassword, acc.password);
+    if (!currentMatch) throw new UnauthorizedException('Invalid current password');
 
     const hashed = await bcrypt.hash(newPassword, 12);
     const now = new Date();

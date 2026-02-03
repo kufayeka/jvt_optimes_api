@@ -36,6 +36,8 @@ import { AccountEditRoleResponseDto } from './dto/account-edit-role-response.dto
 import { AccountEditResponseDto } from './dto/account-edit-response.dto';
 import { AccountLifecycleResponseDto } from './dto/account-lifecycle-response.dto';
 import { AccountDeleteResponseDto } from './dto/account-delete-response.dto';
+import { AccountDashboardResponseDto } from './dto/account-dashboard-response.dto';
+
 
 function parseCookie(req: Request) {
   const header = req.headers.cookie;
@@ -56,6 +58,14 @@ export class AccountController {
   @Serialize(AccountListResponseDto)
   getAll() {
     return this.svc.getAll();
+  }
+
+  @Get('dashboard')
+  @ApiOperation({ summary: 'Account dashboard summary' })
+  @ApiOkResponse({ type: AccountDashboardResponseDto })
+  @Serialize(AccountDashboardResponseDto)
+  getDashboard() {
+    return this.svc.getDashboard();
   }
 
   @Get('validate')
@@ -192,10 +202,11 @@ export class AccountController {
       },
     },
   })
+  @ApiUnauthorizedResponse({ type: ApiErrorResponseDto, description: 'Invalid current password' })
   @ApiNotFoundResponse({ type: ApiErrorResponseDto, description: 'Account not found' })
   @Serialize(AccountChangePasswordResponseDto)
   changePassword(@Param('id') id: string, @Body() body: ChangePasswordDto) {
-    return this.svc.changePassword(id, body.newPassword);
+    return this.svc.changePassword(id, body.currentPassword, body.newPassword);
   }
 
   @Patch(':id/role')
