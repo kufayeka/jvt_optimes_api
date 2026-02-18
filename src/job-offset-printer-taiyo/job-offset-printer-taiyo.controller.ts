@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiConsumes,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -11,6 +12,8 @@ import {
   ApiTags,
   ApiBody,
 } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Response } from 'express';
 import { Serialize } from '../common/decorators/serialize.decorator';
 import { ApiErrorResponseDto } from '../common/dto/api-error-response.dto';
 import { CreateJobOffsetPrinterTaiyoDto } from './dto/create-job-offset-printer-taiyo.dto';
@@ -23,6 +26,8 @@ import { JobOffsetPrinterTaiyoUpdateResponseDto } from './dto/job-offset-printer
 import { JobOffsetPrinterTaiyoLifecycleResponseDto } from './dto/job-offset-printer-taiyo-lifecycle-response.dto';
 import { JobOffsetPrinterTaiyoDeleteResponseDto } from './dto/job-offset-printer-taiyo-delete-response.dto';
 import { JobOffsetPrinterTaiyoDashboardResponseDto } from './dto/job-offset-printer-taiyo-dashboard-response.dto';
+import { JobOffsetPrinterTaiyoUploadPreviewResponseDto } from './dto/job-offset-printer-taiyo-upload-preview-response.dto';
+import { JobOffsetPrinterTaiyoBatchCreateResponseDto } from './dto/job-offset-printer-taiyo-batch-create-response.dto';
 
 @ApiTags('Job Offset Printer Taiyo')
 @Controller('jobs/offset-printer-taiyo')
@@ -43,6 +48,67 @@ export class JobOffsetPrinterTaiyoController {
   @Serialize(JobOffsetPrinterTaiyoDashboardResponseDto)
   getDashboard() {
     return this.svc.getDashboard();
+  }
+
+  @Get('excel/template')
+  @ApiOperation({ summary: 'Download excel template for job import' })
+  downloadExcelTemplate(@Res() res: Response) {
+    const template = this.svc.downloadImportTemplate();
+    res.setHeader('Content-Type', template.contentType);
+    res.setHeader('Content-Disposition', `attachment; filename="${template.filename}"`);
+    res.send(template.buffer);
+  }
+
+  @Post('excel/upload-preview')
+  @ApiOperation({ summary: 'Upload excel (.xlsx/.xls) and preview valid jobs + row errors' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: { type: 'string', format: 'binary' },
+      },
+      required: ['file'],
+    },
+  })
+  @ApiOkResponse({ type: JobOffsetPrinterTaiyoUploadPreviewResponseDto })
+  @ApiBadRequestResponse({ type: ApiErrorResponseDto, description: 'Invalid file or invalid rows' })
+  @UseInterceptors(
+    FileInterceptor('file', {
+      limits: { fileSize: 10 * 1024 * 1024 },
+    }),
+  )
+  uploadExcelPreview(@UploadedFile() file: any) {
+    return this.svc.uploadPreviewExcel(file);
+  }
+
+  @Post('batch-create')
+  @ApiOperation({ summary: 'Batch create jobs from reviewed JSON array' })
+  @ApiBody({
+    schema: {
+      type: 'array',
+      items: { type: 'object' },
+      example: [
+        {
+          work_order: 'WO-2026-0001',
+          sales_order: 'SO-2026-0188',
+          quantity_order: 1,
+          quantity_unit: 21,
+          work_center: 31,
+          planned_start_time: '2026-02-20T08:00:00.000Z',
+          release_date: null,
+          due_date: '2026-02-21T16:00:00.000Z',
+          job_priority: 11,
+          notes: '-',
+          attribute: null,
+        },
+      ],
+    },
+  })
+  @ApiOkResponse({ type: JobOffsetPrinterTaiyoBatchCreateResponseDto })
+  @ApiBadRequestResponse({ type: ApiErrorResponseDto, description: 'JSON array is invalid' })
+  batchCreate(@Body() body: any[]) {
+    return this.svc.batchCreateFromJson(body);
   }
 
   @Get(':id')

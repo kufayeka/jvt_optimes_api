@@ -53,6 +53,7 @@
     "rxjs": "7.8.2",
     "swagger-ui-express": "^4.6.3",
     "uuid": "^13.0.0",
+    "xlsx": "^0.18.5",
     "yup": "^1.7.1"
   },
   "devDependencies": {

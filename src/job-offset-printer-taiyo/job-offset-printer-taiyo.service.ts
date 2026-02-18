@@ -4,11 +4,41 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
+  ServiceUnavailableException,
 } from '@nestjs/common';
 import * as yup from 'yup';
 import { validate as uuidValidate } from 'uuid';
+import * as XLSX from 'xlsx';
 import { PrismaService } from '../prisma.service';
 import { buildValidationDetails } from '../common/utils/validation';
+
+type JobImportError = {
+  row: number;
+  field: string;
+  message: string;
+  value?: any;
+};
+
+type JobImportCandidate = {
+  row: number;
+  data: any;
+};
+
+const JOB_IMPORT_ALLOWED_FIELDS = new Set([
+  'work_order',
+  'sales_order',
+  'quantity_order',
+  'quantity_unit',
+  'work_center',
+  'planned_start_time',
+  'release_date',
+  'due_date',
+  'job_priority',
+  'notes',
+  'attribute',
+]);
+
+const FORBIDDEN_PAYLOAD_KEYS = new Set(['__proto__', 'prototype', 'constructor']);
 
 @Injectable()
 export class JobOffsetPrinterTaiyoService {
@@ -54,6 +84,189 @@ export class JobOffsetPrinterTaiyoService {
       suspended,
       other,
       generated_at: new Date().toISOString(),
+    };
+  }
+
+  downloadImportTemplate() {
+    try {
+      const headers = [
+        'work_order',
+        'sales_order',
+        'quantity_order',
+        'quantity_unit',
+        'work_center',
+        'planned_start_time',
+        'release_date',
+        'due_date',
+        'job_priority',
+        'notes',
+        'attribute',
+      ];
+      const sample = [
+        'WO-2026-0001',
+        'SO-2026-0188',
+        1,
+        'BK',
+        'MACHINE_A',
+        '2026-02-20T08:00:00.000Z',
+        '',
+        '2026-02-21T16:00:00.000Z',
+        'HIGH',
+        'Print urgent order',
+        '{"customer":"ABC","color":"CMYK"}',
+      ];
+
+      const sheet = XLSX.utils.aoa_to_sheet([headers, sample]);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, sheet, 'jobs');
+      const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
+      return {
+        filename: 'job-offset-printer-taiyo-template.xlsx',
+        contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        buffer,
+      };
+    } catch (e) {
+      throw new ServiceUnavailableException('Failed to generate excel template');
+    }
+  }
+
+  async uploadPreviewExcel(file: any) {
+    if (!file?.buffer || !file?.originalname) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [{ field: 'file', message: 'Excel file is required' }],
+      });
+    }
+
+    const fileName = String(file.originalname).toLowerCase();
+    if (!fileName.endsWith('.xlsx') && !fileName.endsWith('.xls')) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [{ field: 'file', message: 'Only .xlsx or .xls files are allowed' }],
+      });
+    }
+
+    let rows: any[] = [];
+    try {
+      const wb = XLSX.read(file.buffer, { type: 'buffer', cellDates: true });
+      const firstSheet = wb.SheetNames?.[0];
+      if (!firstSheet) {
+        throw new Error('No worksheet found');
+      }
+      rows = XLSX.utils.sheet_to_json(wb.Sheets[firstSheet], { defval: null, raw: false });
+    } catch (e) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [{ field: 'file', message: 'Failed to parse excel file' }],
+      });
+    }
+
+    if (!rows.length) {
+      return {
+        total_rows: 0,
+        valid_rows: 0,
+        invalid_rows: 0,
+        data: [],
+        errors: [],
+      };
+    }
+
+    return this.validateJobImportRows(rows, 2);
+  }
+
+  async batchCreateFromJson(rows: any[]) {
+    if (!Array.isArray(rows) || rows.length === 0) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [{ field: 'body', message: 'Request body must be a non-empty JSON array' }],
+      });
+    }
+
+    const payloadDetails: { field: string; message: string }[] = [];
+    const sanitizedRows = rows.map((row, idx) => {
+      const rowNumber = idx + 1;
+      if (!row || typeof row !== 'object' || Array.isArray(row)) {
+        payloadDetails.push({
+          field: `row[${rowNumber}]`,
+          message: 'Each item must be a plain JSON object',
+        });
+        return {};
+      }
+
+      const originalKeys = Object.keys(row);
+      originalKeys.forEach((k) => {
+        if (FORBIDDEN_PAYLOAD_KEYS.has(k)) {
+          payloadDetails.push({
+            field: `row[${rowNumber}].${k}`,
+            message: 'Forbidden key is not allowed',
+          });
+        }
+      });
+
+      const unknownKeys = originalKeys
+        .map((k) => String(k).trim().toLowerCase().replace(/\s+/g, '_'))
+        .filter((k) => !JOB_IMPORT_ALLOWED_FIELDS.has(k));
+      if (unknownKeys.length) {
+        unknownKeys.forEach((k) => {
+          payloadDetails.push({
+            field: `row[${rowNumber}].${k}`,
+            message: 'Unknown field is not allowed in batch-create payload',
+          });
+        });
+      }
+
+      return row;
+    });
+
+    if (payloadDetails.length) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: payloadDetails,
+      });
+    }
+
+    const preview = await this.validateJobImportRows(sanitizedRows, 1);
+    if (preview.invalid_rows > 0) {
+      return {
+        created_count: 0,
+        failed_count: preview.invalid_rows,
+        created: [],
+        errors: preview.errors,
+      };
+    }
+
+    const created: any[] = [];
+    const errors: JobImportError[] = [];
+    for (const item of preview.data) {
+      try {
+        const saved = await this.add(item);
+        created.push(saved);
+      } catch (e: any) {
+        const details = e?.response?.details;
+        if (Array.isArray(details) && details.length) {
+          details.forEach((d: any) =>
+            errors.push({
+              row: item.__row || 0,
+              field: d.field || 'unknown',
+              message: d.message || 'Business validation failed',
+              value: item?.[d.field],
+            }),
+          );
+        } else {
+          errors.push({
+            row: item.__row || 0,
+            field: 'row',
+            message: e?.message || 'Failed to create job',
+          });
+        }
+      }
+    }
+
+    return {
+      created_count: created.length,
+      failed_count: errors.length ? new Set(errors.map((e) => e.row)).size : 0,
+      created,
+      errors,
     };
   }
 
@@ -221,6 +434,245 @@ export class JobOffsetPrinterTaiyoService {
     if (row?.job_lifecycle_lookup?.code !== 'SCHEDULED') {
       throw new ForbiddenException(`Cannot ${action} job unless status is SCHEDULED`);
     }
+  }
+
+  private normalizeImportRow(row: any) {
+    const normalized: Record<string, any> = {};
+    Object.keys(row || {}).forEach((k) => {
+      const nk = String(k).trim().toLowerCase().replace(/\s+/g, '_');
+      normalized[nk] = row[k];
+    });
+    return normalized;
+  }
+
+  private parseDateField(value: any, field: string, rowNumber: number, errors: JobImportError[]): Date | null {
+    if (value === undefined || value === null || value === '') return null;
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) {
+      errors.push({ row: rowNumber, field, message: `${field} must be a valid date`, value });
+      return null;
+    }
+    return d;
+  }
+
+  private parseIntegerField(value: any, field: string, rowNumber: number, errors: JobImportError[], defaultValue?: number) {
+    if (value === undefined || value === null || value === '') {
+      return defaultValue;
+    }
+    const num = typeof value === 'number' ? value : parseInt(String(value), 10);
+    if (!Number.isInteger(num) || num < 1) {
+      errors.push({ row: rowNumber, field, message: `${field} must be integer >= 1`, value });
+      return null;
+    }
+    return num;
+  }
+
+  private parseJsonField(value: any, field: string, rowNumber: number, errors: JobImportError[]) {
+    if (value === undefined || value === null || value === '') return null;
+    if (typeof value === 'object') return value;
+    try {
+      return JSON.parse(String(value));
+    } catch {
+      errors.push({ row: rowNumber, field, message: `${field} must be a valid JSON object/string`, value });
+      return null;
+    }
+  }
+
+  private resolveLookupForImport(
+    value: any,
+    lookupType: string,
+    field: string,
+    rowNumber: number,
+    errors: JobImportError[],
+    codeMaps: Map<string, number>,
+    idMaps: Set<number>,
+  ) {
+    if (value === undefined || value === null || value === '') {
+      errors.push({ row: rowNumber, field, message: `${field} is required` });
+      return null;
+    }
+
+    const asString = String(value).trim();
+    const asNumber = Number(asString);
+    if (!Number.isNaN(asNumber) && Number.isInteger(asNumber)) {
+      if (idMaps.has(asNumber)) return asNumber;
+      errors.push({
+        row: rowNumber,
+        field,
+        message: `${field} lookup not found for type ${lookupType}`,
+        value,
+      });
+      return null;
+    }
+
+    const id = codeMaps.get(asString.toUpperCase());
+    if (!id) {
+      errors.push({
+        row: rowNumber,
+        field,
+        message: `${field} lookup code not found for type ${lookupType}`,
+        value,
+      });
+      return null;
+    }
+    return id;
+  }
+
+  private async validateJobImportRows(rows: any[], rowStart: number) {
+    const errors: JobImportError[] = [];
+    const candidates: JobImportCandidate[] = [];
+
+    const lookupTypes = ['QUANTITY_UNIT', 'WORK_CENTER', 'JOB_PRIORITY'];
+    const lookups = await this.prisma.lookup.findMany({
+      where: { lookup_type: { in: lookupTypes } },
+      select: { id: true, lookup_type: true, code: true },
+    });
+
+    const codeMaps: Record<string, Map<string, number>> = {
+      QUANTITY_UNIT: new Map(),
+      WORK_CENTER: new Map(),
+      JOB_PRIORITY: new Map(),
+    };
+    const idMaps: Record<string, Set<number>> = {
+      QUANTITY_UNIT: new Set(),
+      WORK_CENTER: new Set(),
+      JOB_PRIORITY: new Set(),
+    };
+
+    lookups.forEach((l) => {
+      codeMaps[l.lookup_type].set(l.code.toUpperCase(), l.id);
+      idMaps[l.lookup_type].add(l.id);
+    });
+
+    rows.forEach((raw, idx) => {
+      const rowNumber = idx + rowStart;
+      const row = this.normalizeImportRow(raw);
+
+      const work_order = String(row.work_order ?? '').trim();
+      const sales_order = String(row.sales_order ?? '').trim();
+      if (!work_order) errors.push({ row: rowNumber, field: 'work_order', message: 'work_order is required' });
+      if (!sales_order) errors.push({ row: rowNumber, field: 'sales_order', message: 'sales_order is required' });
+      if (work_order && work_order.length > 100) errors.push({ row: rowNumber, field: 'work_order', message: 'work_order max length is 100', value: work_order });
+      if (sales_order && sales_order.length > 100) errors.push({ row: rowNumber, field: 'sales_order', message: 'sales_order max length is 100', value: sales_order });
+
+      const quantity_order = this.parseIntegerField(row.quantity_order, 'quantity_order', rowNumber, errors, 1);
+      const planned_start_time = this.parseDateField(row.planned_start_time, 'planned_start_time', rowNumber, errors);
+      const release_date = this.parseDateField(row.release_date, 'release_date', rowNumber, errors);
+      const due_date = this.parseDateField(row.due_date, 'due_date', rowNumber, errors);
+      const attribute = this.parseJsonField(row.attribute, 'attribute', rowNumber, errors);
+
+      const quantity_unit = this.resolveLookupForImport(
+        row.quantity_unit,
+        'QUANTITY_UNIT',
+        'quantity_unit',
+        rowNumber,
+        errors,
+        codeMaps.QUANTITY_UNIT,
+        idMaps.QUANTITY_UNIT,
+      );
+      const work_center = this.resolveLookupForImport(
+        row.work_center,
+        'WORK_CENTER',
+        'work_center',
+        rowNumber,
+        errors,
+        codeMaps.WORK_CENTER,
+        idMaps.WORK_CENTER,
+      );
+      const job_priority = this.resolveLookupForImport(
+        row.job_priority,
+        'JOB_PRIORITY',
+        'job_priority',
+        rowNumber,
+        errors,
+        codeMaps.JOB_PRIORITY,
+        idMaps.JOB_PRIORITY,
+      );
+
+      candidates.push({
+        row: rowNumber,
+        data: {
+          __row: rowNumber,
+          work_order,
+          sales_order,
+          quantity_order,
+          quantity_unit,
+          work_center,
+          planned_start_time: planned_start_time?.toISOString() || null,
+          release_date: release_date?.toISOString() || null,
+          due_date: due_date?.toISOString() || null,
+          job_priority,
+          notes: row.notes ?? '-',
+          attribute,
+        },
+      });
+    });
+
+    const workOrderRows = new Map<string, number>();
+    const scheduleRows = new Map<string, number>();
+    candidates.forEach((c) => {
+      if (c.data.work_order) {
+        const prev = workOrderRows.get(c.data.work_order);
+        if (prev) {
+          errors.push({ row: c.row, field: 'work_order', message: `Duplicate work_order in file (first found at row ${prev})`, value: c.data.work_order });
+        } else {
+          workOrderRows.set(c.data.work_order, c.row);
+        }
+      }
+      if (c.data.work_center && c.data.planned_start_time) {
+        const key = `${c.data.work_center}::${c.data.planned_start_time}`;
+        const prev = scheduleRows.get(key);
+        if (prev) {
+          errors.push({ row: c.row, field: 'planned_start_time', message: `Duplicate work_center + planned_start_time in file (first found at row ${prev})` });
+        } else {
+          scheduleRows.set(key, c.row);
+        }
+      }
+    });
+
+    const workOrders = Array.from(new Set(candidates.map((c) => c.data.work_order).filter(Boolean)));
+    if (workOrders.length) {
+      const existing = await this.prisma.jobOffsetPrinterTaiyo.findMany({
+        where: { work_order: { in: workOrders } },
+        select: { work_order: true },
+      });
+      const existingSet = new Set(existing.map((e) => e.work_order));
+      candidates.forEach((c) => {
+        if (existingSet.has(c.data.work_order)) {
+          errors.push({ row: c.row, field: 'work_order', message: 'Work order already exists', value: c.data.work_order });
+        }
+      });
+    }
+
+    for (const c of candidates) {
+      if (!c.data.work_center || !c.data.planned_start_time) continue;
+      const conflict = await this.prisma.jobOffsetPrinterTaiyo.findFirst({
+        where: {
+          work_center: c.data.work_center,
+          planned_start_time: new Date(c.data.planned_start_time),
+        },
+        select: { id: true },
+      });
+      if (conflict) {
+        errors.push({
+          row: c.row,
+          field: 'planned_start_time',
+          message: 'planned_start_time conflicts with another job in the same work_center',
+          value: c.data.planned_start_time,
+        });
+      }
+    }
+
+    const badRows = new Set(errors.map((e) => e.row));
+    const data = candidates.filter((c) => !badRows.has(c.row)).map((c) => c.data);
+
+    return {
+      total_rows: rows.length,
+      valid_rows: data.length,
+      invalid_rows: badRows.size,
+      data,
+      errors,
+    };
   }
 
   async add(data: any) {
