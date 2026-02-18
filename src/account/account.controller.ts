@@ -19,6 +19,7 @@ import { AccountResponseDto } from './dto/account-response.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { Request, Response } from 'express';
 import { EditRoleDto } from './dto/edit-role.dto';
+import { EditAccountDto } from './dto/edit-account.dto';
 import { Serialize } from '../common/decorators/serialize.decorator';
 import { ApiErrorResponseDto } from '../common/dto/api-error-response.dto';
 import { OkResponseDto } from '../common/dto/ok-response.dto';
@@ -29,9 +30,14 @@ import { AccountGetResponseDto } from './dto/account-get-response.dto';
 import { AccountLoginResponseDto } from './dto/account-login-response.dto';
 import { AccountValidateResponseDto } from './dto/account-validate-response.dto';
 import { AccountResetPasswordResponseDto } from './dto/account-reset-password-response.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
+import { AccountChangePasswordResponseDto } from './dto/account-change-password-response.dto';
 import { AccountEditRoleResponseDto } from './dto/account-edit-role-response.dto';
+import { AccountEditResponseDto } from './dto/account-edit-response.dto';
 import { AccountLifecycleResponseDto } from './dto/account-lifecycle-response.dto';
 import { AccountDeleteResponseDto } from './dto/account-delete-response.dto';
+import { AccountDashboardResponseDto } from './dto/account-dashboard-response.dto';
+
 
 function parseCookie(req: Request) {
   const header = req.headers.cookie;
@@ -52,6 +58,28 @@ export class AccountController {
   @Serialize(AccountListResponseDto)
   getAll() {
     return this.svc.getAll();
+  }
+
+  @Get('dashboard')
+  @ApiOperation({ summary: 'Account dashboard summary' })
+  @ApiOkResponse({ type: AccountDashboardResponseDto })
+  @Serialize(AccountDashboardResponseDto)
+  getDashboard() {
+    return this.svc.getDashboard();
+  }
+
+  @Get('validate')
+  @ApiOperation({ summary: 'Validate cookie and return account' })
+  @ApiOkResponse({ type: AccountValidateResponseDto })
+  @ApiBadRequestResponse({ type: ApiErrorResponseDto, description: 'Invalid UUID format' })
+  @ApiUnauthorizedResponse({ type: ApiErrorResponseDto, description: 'Invalid or missing cookie' })
+  @Serialize(AccountValidateResponseDto)
+  async validate(@Req() req: Request) {
+    const cookies = parseCookie(req);
+    const id = cookies['accountId'];
+    console.log('Validating accountId from cookie:', id);
+    if (!id) throw new UnauthorizedException('accountId cookie not present');
+    return this.svc.validateCookie(id);
   }
 
   @Get(':id')
@@ -128,27 +156,40 @@ export class AccountController {
     return { ok: true };
   }
 
-  @Get('validate')
-  @ApiOperation({ summary: 'Validate cookie and return account' })
-  @ApiOkResponse({ type: AccountValidateResponseDto })
-  @ApiBadRequestResponse({ type: ApiErrorResponseDto, description: 'Invalid UUID format' })
-  @ApiUnauthorizedResponse({ type: ApiErrorResponseDto, description: 'Invalid or missing cookie' })
-  @Serialize(AccountValidateResponseDto)
-  async validate(@Req() req: Request) {
-    const cookies = parseCookie(req);
-    const id = cookies['accountId'];
-    if (!id) throw new UnauthorizedException('accountId cookie not present');
-    return this.svc.validateCookie(id);
-  }
-
   @Post(':id/reset-password')
   @ApiOperation({
-    summary: 'Reset password (admin or self)',
-    description: 'If lifecycle=CREATED and password change succeeds, lifecycle becomes ACTIVE; must_change_password=false; password_last_changed set.',
+    summary: 'Reset password (system-generated)',
+    description: 'System generates a new password and sets password_expiry_time. Response includes the new password and expiry info.',
   })
   @ApiParam({ name: 'id', description: 'Account ID (UUID)' })
   @ApiBody({ type: ResetPasswordDto })
   @ApiOkResponse({ type: AccountResetPasswordResponseDto })
+  @ApiBadRequestResponse({
+    type: ApiErrorResponseDto,
+    description: 'Invalid UUID format or password_expiry_time invalid',
+    schema: {
+      example: {
+        statusCode: 400,
+        error: 'Bad Request',
+        message: 'Validation failed',
+        details: [{ field: 'password_expiry_time', message: 'password_expiry_time must be a valid ISO date' }],
+      },
+    },
+  })
+  @ApiNotFoundResponse({ type: ApiErrorResponseDto, description: 'Account not found' })
+  @Serialize(AccountResetPasswordResponseDto)
+  resetPassword(@Param('id') id: string, @Body() body: ResetPasswordDto) {
+    return this.svc.resetPassword(id, body.password_expiry_time);
+  }
+
+  @Post(':id/change-password')
+  @ApiOperation({
+    summary: 'Change password (user-defined)',
+    description: 'New password must follow SOP. password_expiry_time is set to 3 months from now.',
+  })
+  @ApiParam({ name: 'id', description: 'Account ID (UUID)' })
+  @ApiBody({ type: ChangePasswordDto })
+  @ApiOkResponse({ type: AccountChangePasswordResponseDto })
   @ApiBadRequestResponse({
     type: ApiErrorResponseDto,
     description: 'Invalid UUID format or password complexity failed',
@@ -157,14 +198,15 @@ export class AccountController {
         statusCode: 400,
         error: 'Bad Request',
         message: 'Validation failed',
-        details: [{ field: 'id', message: 'Invalid UUID format' }],
+        details: [{ field: 'newPassword', message: 'Password does not meet complexity rules' }],
       },
     },
   })
+  @ApiUnauthorizedResponse({ type: ApiErrorResponseDto, description: 'Invalid current password' })
   @ApiNotFoundResponse({ type: ApiErrorResponseDto, description: 'Account not found' })
-  @Serialize(AccountResetPasswordResponseDto)
-  resetPassword(@Param('id') id: string, @Body() body: ResetPasswordDto) {
-    return this.svc.resetPassword(id, body.newPassword);
+  @Serialize(AccountChangePasswordResponseDto)
+  changePassword(@Param('id') id: string, @Body() body: ChangePasswordDto) {
+    return this.svc.changePassword(id, body.currentPassword, body.newPassword);
   }
 
   @Patch(':id/role')
@@ -185,8 +227,43 @@ export class AccountController {
     },
   })
   @Serialize(AccountEditRoleResponseDto)
-  editRole(@Param('id') id: string, @Body('roleLookupId') roleLookupId: number | string) {
-    return this.svc.editRole(id, roleLookupId);
+  editRole(@Param('id') id: string, @Body() body: EditRoleDto) {
+    return this.svc.editRole(id, body.roleLookupId);
+  }
+
+  @Patch(':id')
+  @ApiOperation({ summary: 'Edit account (username, full_name, phone_number, email, attribute)' })
+  @ApiParam({ name: 'id', description: 'Account ID (UUID)' })
+  @ApiBody({ type: EditAccountDto })
+  @ApiOkResponse({ type: AccountEditResponseDto })
+  @ApiBadRequestResponse({
+    type: ApiErrorResponseDto,
+    description: 'Invalid UUID format or validation failed',
+    schema: {
+      example: {
+        statusCode: 400,
+        error: 'Bad Request',
+        message: 'Validation failed',
+        details: [{ field: 'id', message: 'Invalid UUID format' }],
+      },
+    },
+  })
+  @ApiConflictResponse({
+    type: ApiErrorResponseDto,
+    description: 'Username already exists',
+    schema: {
+      example: {
+        statusCode: 409,
+        error: 'Conflict',
+        message: 'Username already exists',
+        details: [{ field: 'username', message: 'Username already exists' }],
+      },
+    },
+  })
+  @ApiNotFoundResponse({ type: ApiErrorResponseDto, description: 'Account not found' })
+  @Serialize(AccountEditResponseDto)
+  editAccount(@Param('id') id: string, @Body() body: EditAccountDto) {
+    return this.svc.editAccount(id, body as any);
   }
 
   @Patch(':id/disable')

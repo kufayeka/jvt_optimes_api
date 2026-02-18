@@ -14,6 +14,11 @@ async function bootstrap() {
 
   app.enableShutdownHooks();
 
+  app.use((req, _res, next) => {
+    console.log(`[${req.method}] ${req.originalUrl}`);
+    next();
+  });
+
   app.setGlobalPrefix('api');
 
   const config = new DocumentBuilder()
