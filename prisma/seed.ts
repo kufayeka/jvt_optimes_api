@@ -1,8 +1,14 @@
+import 'dotenv/config';
 import { PrismaClient } from './generated/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import * as bcrypt from 'bcrypt';
 
-const pool = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
+const databaseUrl = process.env.DATABASE_URL?.trim();
+if (!databaseUrl) {
+  throw new Error('DATABASE_URL is not set. Ensure .env is loaded before running prisma/seed.ts');
+}
+
+const pool = new PrismaPg({ connectionString: databaseUrl });
 const prisma = new PrismaClient({ adapter: pool });
 
 // removed user/post seeds — project now only seeds lookups and accounts
@@ -12,6 +18,7 @@ async function main() {
 
   // Clear existing data (only lookup/account tables are relevant)
   // Seed lookups
+
   const lookups = [
     // ACCOUNT_LIFECYCLE
     { lookup_type: 'ACCOUNT_LIFECYCLE', code: 'CREATED', label: 'Created', sort_order: 1 },
@@ -38,14 +45,13 @@ async function main() {
     { lookup_type: 'JOB_LIFECYCLE_STATE', code: 'RUNNING', label: 'Running', sort_order: 3 },
     { lookup_type: 'JOB_LIFECYCLE_STATE', code: 'SUSPENDED', label: 'Suspended', sort_order: 4 },
     { lookup_type: 'JOB_LIFECYCLE_STATE', code: 'COMPLETED', label: 'Completed', sort_order: 5 },
-    { lookup_type: 'JOB_LIFECYCLE_STATE', code: 'CANCELLED', label: 'Cancelled', sort_order: 6 },
     { lookup_type: 'JOB_LIFECYCLE_STATE', code: 'CLOSED', label: 'Closed', sort_order: 7 },
     // QUANTITY_UNIT
     { lookup_type: 'QUANTITY_UNIT', code: 'BK', label: 'BK', sort_order: 1 },
     { lookup_type: 'QUANTITY_UNIT', code: 'EA', label: 'EA', sort_order: 2 },
     // WORK_CENTER
-    { lookup_type: 'WORK_CENTER', code: 'MACHINE_A', label: 'Machine A', sort_order: 1 },
-    { lookup_type: 'WORK_CENTER', code: 'MACHINE_B', label: 'Machine B', sort_order: 2 },
+    { lookup_type: 'WORK_CENTER', code: 'Jasuindo.OffsetPrinter.Taiyo1', label: 'Offset Printer Taiyo 1', sort_order: 1 },
+    { lookup_type: 'WORK_CENTER', code: 'Jasuindo.OffsetPrinter.Taiyo2', label: 'Offset Printer Taiyo 2', sort_order: 2 },
   ];
 
   for (const l of lookups) {
@@ -74,51 +80,60 @@ async function main() {
   const typePermanent = await prisma.lookup.findFirst({
     where: { lookup_type: 'ACCOUNT_TYPE', code: 'PERMANENT' },
   });
-  const typeWithExp = await prisma.lookup.findFirst({
-    where: { lookup_type: 'ACCOUNT_TYPE', code: 'WITH_EXPIRATION' },
-  });
   const roleAdmin = await prisma.lookup.findFirst({
     where: { lookup_type: 'ACCOUNT_ROLE', code: 'ADMINISTRATOR' },
   });
   const roleOperator = await prisma.lookup.findFirst({
     where: { lookup_type: 'ACCOUNT_ROLE', code: 'OPERATOR' },
   });
+  const rolePpic = await prisma.lookup.findFirst({
+    where: { lookup_type: 'ACCOUNT_ROLE', code: 'PPIC' },
+  });
 
-  if (!lifecycleCreated || !typePermanent || !typeWithExp) {
+  if (!lifecycleCreated || !typePermanent) {
     throw new Error('Required lookup seeds missing for account seeding');
   }
 
+  const initialPassword = 'Qwerty12345!';
+  const hashed = await bcrypt.hash(initialPassword, 12);
+
   const accountSeeds = [
     {
-      username: 'admin_01',
-      full_name: 'Administrator One',
-      email: 'admin01@example.com',
-      phone_number: '+628111111111',
+      username: 'alice2',
+      full_name: 'Alice Operator',
+      email: 'alice2@example.com',
+      phone_number: null,
+      account_type: typePermanent.id,
+      account_role: roleOperator?.id ?? null,
+      account_expiry_date: null,
+      initial_password: initialPassword,
+    },
+    {
+      username: 'alice22',
+      full_name: 'Alice Admin',
+      email: 'alice22@example.com',
+      phone_number: null,
       account_type: typePermanent.id,
       account_role: roleAdmin?.id ?? null,
       account_expiry_date: null,
+      initial_password: initialPassword,
     },
     {
-      username: 'operator_01',
-      full_name: 'Operator One',
-      email: 'operator01@example.com',
-      phone_number: '+628222222222',
-      account_type: typeWithExp.id,
-      account_role: roleOperator?.id ?? null,
-      account_expiry_date: new Date(Date.now() + 1000 * 60 * 60 * 24 * 365),
+      username: 'john',
+      full_name: 'John PPIC',
+      email: 'john@example.com',
+      phone_number: null,
+      account_type: typePermanent.id,
+      account_role: rolePpic?.id ?? null,
+      account_expiry_date: null,
+      initial_password: initialPassword,
     },
   ];
 
   for (const acc of accountSeeds) {
-    const existing = await prisma.account.findUnique({ where: { username: acc.username } });
-    if (existing) {
-      console.log(`Account ${acc.username} already exists`);
-      continue;
-    }
-    const initialPassword = 'TempPass!2345';
-    const hashed = await bcrypt.hash(initialPassword, 12);
-    const created = await prisma.account.create({
-      data: {
+    const saved = await prisma.account.upsert({
+      where: { username: acc.username },
+      create: {
         username: acc.username,
         password: hashed,
         full_name: acc.full_name,
@@ -131,8 +146,17 @@ async function main() {
         must_change_password: true,
         password_last_changed: null,
       },
+      update: {
+        password: hashed,
+        full_name: acc.full_name,
+        email: acc.email,
+        phone_number: acc.phone_number,
+        account_type: acc.account_type,
+        account_role: acc.account_role,
+        account_expiry_date: acc.account_expiry_date,
+      },
     });
-    console.log(`Created account ${created.username} with initial password: ${initialPassword}`);
+    console.log(`Upserted account ${saved.username} with password: ${acc.initial_password}`);
   }
   console.log(`Seeding finished.`);
 }
