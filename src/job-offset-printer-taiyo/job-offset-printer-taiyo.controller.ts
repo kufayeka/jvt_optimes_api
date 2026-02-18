@@ -22,6 +22,7 @@ import { JobOffsetPrinterTaiyoCreateResponseDto } from './dto/job-offset-printer
 import { JobOffsetPrinterTaiyoUpdateResponseDto } from './dto/job-offset-printer-taiyo-update-response.dto';
 import { JobOffsetPrinterTaiyoLifecycleResponseDto } from './dto/job-offset-printer-taiyo-lifecycle-response.dto';
 import { JobOffsetPrinterTaiyoDeleteResponseDto } from './dto/job-offset-printer-taiyo-delete-response.dto';
+import { JobOffsetPrinterTaiyoDashboardResponseDto } from './dto/job-offset-printer-taiyo-dashboard-response.dto';
 
 @ApiTags('Job Offset Printer Taiyo')
 @Controller('jobs/offset-printer-taiyo')
@@ -34,6 +35,14 @@ export class JobOffsetPrinterTaiyoController {
   @Serialize(JobOffsetPrinterTaiyoListResponseDto)
   getAll() {
     return this.svc.getAll();
+  }
+
+  @Get('dashboard')
+  @ApiOperation({ summary: 'Job dashboard summary' })
+  @ApiOkResponse({ type: JobOffsetPrinterTaiyoDashboardResponseDto })
+  @Serialize(JobOffsetPrinterTaiyoDashboardResponseDto)
+  getDashboard() {
+    return this.svc.getDashboard();
   }
 
   @Get(':id')

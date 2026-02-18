@@ -14,6 +14,49 @@ import { buildValidationDetails } from '../common/utils/validation';
 export class JobOffsetPrinterTaiyoService {
   constructor(private prisma: PrismaService) {}
 
+  async getDashboard() {
+    const lifecycles = await this.prisma.lookup.findMany({
+      where: { lookup_type: 'JOB_LIFECYCLE_STATE' },
+      select: { id: true, code: true },
+    });
+    const idToCode = new Map<number, string>();
+    lifecycles.forEach((l) => idToCode.set(l.id, l.code));
+
+    const grouped = await this.prisma.jobOffsetPrinterTaiyo.groupBy({
+      by: ['job_lifecycle_state'],
+      _count: { _all: true },
+    });
+
+    const counts: Record<string, number> = {};
+    let total = 0;
+    grouped.forEach((g) => {
+      const code = idToCode.get(g.job_lifecycle_state) || 'OTHER';
+      const count = g._count._all;
+      counts[code] = (counts[code] || 0) + count;
+      total += count;
+    });
+
+    const scheduled = counts.SCHEDULED || 0;
+    const released = counts.RELEASED || 0;
+    const running = counts.RUNNING || 0;
+    const completed = counts.COMPLETED || 0;
+    const suspended = counts.SUSPENDED || 0;
+
+    const knownTotal = scheduled + released + running + completed + suspended;
+    const other = Math.max(0, total - knownTotal);
+
+    return {
+      total,
+      scheduled,
+      released,
+      running,
+      completed,
+      suspended,
+      other,
+      generated_at: new Date().toISOString(),
+    };
+  }
+
   async getAll() {
     const rows = await this.prisma.jobOffsetPrinterTaiyo.findMany({
       include: {
