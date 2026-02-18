@@ -28,6 +28,24 @@ async function main() {
     { lookup_type: 'ACCOUNT_ROLE', code: 'PPIC', label: 'PPIC', sort_order: 3 },
     { lookup_type: 'ACCOUNT_ROLE', code: 'MAINTENANCE', label: 'Maintenance', sort_order: 4 },
     { lookup_type: 'ACCOUNT_ROLE', code: 'MAINTENANCE_ADMINISTRATOR', label: 'Maintenance Administrator', sort_order: 5 },
+    // JOB_PRIORITY
+    { lookup_type: 'JOB_PRIORITY', code: 'HIGH', label: 'High', sort_order: 1 },
+    { lookup_type: 'JOB_PRIORITY', code: 'MEDIUM', label: 'Medium', sort_order: 2 },
+    { lookup_type: 'JOB_PRIORITY', code: 'LOW', label: 'Low', sort_order: 3 },
+    // JOB_LIFECYCLE_STATE
+    { lookup_type: 'JOB_LIFECYCLE_STATE', code: 'SCHEDULED', label: 'Scheduled', sort_order: 1 },
+    { lookup_type: 'JOB_LIFECYCLE_STATE', code: 'RELEASED', label: 'Released', sort_order: 2 },
+    { lookup_type: 'JOB_LIFECYCLE_STATE', code: 'RUNNING', label: 'Running', sort_order: 3 },
+    { lookup_type: 'JOB_LIFECYCLE_STATE', code: 'SUSPENDED', label: 'Suspended', sort_order: 4 },
+    { lookup_type: 'JOB_LIFECYCLE_STATE', code: 'COMPLETED', label: 'Completed', sort_order: 5 },
+    { lookup_type: 'JOB_LIFECYCLE_STATE', code: 'CANCELLED', label: 'Cancelled', sort_order: 6 },
+    { lookup_type: 'JOB_LIFECYCLE_STATE', code: 'CLOSED', label: 'Closed', sort_order: 7 },
+    // QUANTITY_UNIT
+    { lookup_type: 'QUANTITY_UNIT', code: 'BK', label: 'BK', sort_order: 1 },
+    { lookup_type: 'QUANTITY_UNIT', code: 'EA', label: 'EA', sort_order: 2 },
+    // WORK_CENTER
+    { lookup_type: 'WORK_CENTER', code: 'MACHINE_A', label: 'Machine A', sort_order: 1 },
+    { lookup_type: 'WORK_CENTER', code: 'MACHINE_B', label: 'Machine B', sort_order: 2 },
   ];
 
   for (const l of lookups) {

@@ -385,7 +385,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   Lookup: 'Lookup',
-  Account: 'Account'
+  Account: 'Account',
+  JobOffsetPrinterTaiyo: 'JobOffsetPrinterTaiyo'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -401,7 +402,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "lookup" | "account"
+    modelProps: "lookup" | "account" | "jobOffsetPrinterTaiyo"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -553,6 +554,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    JobOffsetPrinterTaiyo: {
+      payload: Prisma.$JobOffsetPrinterTaiyoPayload<ExtArgs>
+      fields: Prisma.JobOffsetPrinterTaiyoFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.JobOffsetPrinterTaiyoFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobOffsetPrinterTaiyoPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.JobOffsetPrinterTaiyoFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobOffsetPrinterTaiyoPayload>
+        }
+        findFirst: {
+          args: Prisma.JobOffsetPrinterTaiyoFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobOffsetPrinterTaiyoPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.JobOffsetPrinterTaiyoFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobOffsetPrinterTaiyoPayload>
+        }
+        findMany: {
+          args: Prisma.JobOffsetPrinterTaiyoFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobOffsetPrinterTaiyoPayload>[]
+        }
+        create: {
+          args: Prisma.JobOffsetPrinterTaiyoCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobOffsetPrinterTaiyoPayload>
+        }
+        createMany: {
+          args: Prisma.JobOffsetPrinterTaiyoCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.JobOffsetPrinterTaiyoCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobOffsetPrinterTaiyoPayload>[]
+        }
+        delete: {
+          args: Prisma.JobOffsetPrinterTaiyoDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobOffsetPrinterTaiyoPayload>
+        }
+        update: {
+          args: Prisma.JobOffsetPrinterTaiyoUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobOffsetPrinterTaiyoPayload>
+        }
+        deleteMany: {
+          args: Prisma.JobOffsetPrinterTaiyoDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.JobOffsetPrinterTaiyoUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.JobOffsetPrinterTaiyoUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobOffsetPrinterTaiyoPayload>[]
+        }
+        upsert: {
+          args: Prisma.JobOffsetPrinterTaiyoUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobOffsetPrinterTaiyoPayload>
+        }
+        aggregate: {
+          args: Prisma.JobOffsetPrinterTaiyoAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateJobOffsetPrinterTaiyo>
+        }
+        groupBy: {
+          args: Prisma.JobOffsetPrinterTaiyoGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.JobOffsetPrinterTaiyoGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.JobOffsetPrinterTaiyoCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.JobOffsetPrinterTaiyoCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -625,6 +700,25 @@ export const AccountScalarFieldEnum = {
 } as const
 
 export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
+
+
+export const JobOffsetPrinterTaiyoScalarFieldEnum = {
+  id: 'id',
+  work_order: 'work_order',
+  sales_order: 'sales_order',
+  quantity_order: 'quantity_order',
+  quantity_unit: 'quantity_unit',
+  work_center: 'work_center',
+  planned_start_time: 'planned_start_time',
+  release_date: 'release_date',
+  due_date: 'due_date',
+  job_priority: 'job_priority',
+  job_lifecycle_state: 'job_lifecycle_state',
+  notes: 'notes',
+  attribute: 'attribute'
+} as const
+
+export type JobOffsetPrinterTaiyoScalarFieldEnum = (typeof JobOffsetPrinterTaiyoScalarFieldEnum)[keyof typeof JobOffsetPrinterTaiyoScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -831,6 +925,7 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   lookup?: Prisma.LookupOmit
   account?: Prisma.AccountOmit
+  jobOffsetPrinterTaiyo?: Prisma.JobOffsetPrinterTaiyoOmit
 }
 
 /* Types for Logging */

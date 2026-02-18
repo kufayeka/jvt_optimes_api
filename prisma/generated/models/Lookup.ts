@@ -243,6 +243,10 @@ export type LookupWhereInput = {
   accounts_as_lifecycle?: Prisma.AccountListRelationFilter
   accounts_as_type?: Prisma.AccountListRelationFilter
   accounts_as_role?: Prisma.AccountListRelationFilter
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoListRelationFilter
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoListRelationFilter
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoListRelationFilter
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoListRelationFilter
 }
 
 export type LookupOrderByWithRelationInput = {
@@ -257,6 +261,10 @@ export type LookupOrderByWithRelationInput = {
   accounts_as_lifecycle?: Prisma.AccountOrderByRelationAggregateInput
   accounts_as_type?: Prisma.AccountOrderByRelationAggregateInput
   accounts_as_role?: Prisma.AccountOrderByRelationAggregateInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoOrderByRelationAggregateInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoOrderByRelationAggregateInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoOrderByRelationAggregateInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoOrderByRelationAggregateInput
 }
 
 export type LookupWhereUniqueInput = Prisma.AtLeast<{
@@ -275,6 +283,10 @@ export type LookupWhereUniqueInput = Prisma.AtLeast<{
   accounts_as_lifecycle?: Prisma.AccountListRelationFilter
   accounts_as_type?: Prisma.AccountListRelationFilter
   accounts_as_role?: Prisma.AccountListRelationFilter
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoListRelationFilter
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoListRelationFilter
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoListRelationFilter
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoListRelationFilter
 }, "id" | "lookup_type_code">
 
 export type LookupOrderByWithAggregationInput = {
@@ -318,6 +330,10 @@ export type LookupCreateInput = {
   accounts_as_lifecycle?: Prisma.AccountCreateNestedManyWithoutAccount_lifecycle_lookupInput
   accounts_as_type?: Prisma.AccountCreateNestedManyWithoutAccount_type_lookupInput
   accounts_as_role?: Prisma.AccountCreateNestedManyWithoutAccount_role_lookupInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutQuantity_unit_lookupInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutWork_center_lookupInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutJob_priority_lookupInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutJob_lifecycle_lookupInput
 }
 
 export type LookupUncheckedCreateInput = {
@@ -332,6 +348,10 @@ export type LookupUncheckedCreateInput = {
   accounts_as_lifecycle?: Prisma.AccountUncheckedCreateNestedManyWithoutAccount_lifecycle_lookupInput
   accounts_as_type?: Prisma.AccountUncheckedCreateNestedManyWithoutAccount_type_lookupInput
   accounts_as_role?: Prisma.AccountUncheckedCreateNestedManyWithoutAccount_role_lookupInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutQuantity_unit_lookupInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutWork_center_lookupInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutJob_priority_lookupInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutJob_lifecycle_lookupInput
 }
 
 export type LookupUpdateInput = {
@@ -345,6 +365,10 @@ export type LookupUpdateInput = {
   accounts_as_lifecycle?: Prisma.AccountUpdateManyWithoutAccount_lifecycle_lookupNestedInput
   accounts_as_type?: Prisma.AccountUpdateManyWithoutAccount_type_lookupNestedInput
   accounts_as_role?: Prisma.AccountUpdateManyWithoutAccount_role_lookupNestedInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutQuantity_unit_lookupNestedInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutWork_center_lookupNestedInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutJob_priority_lookupNestedInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutJob_lifecycle_lookupNestedInput
 }
 
 export type LookupUncheckedUpdateInput = {
@@ -359,6 +383,10 @@ export type LookupUncheckedUpdateInput = {
   accounts_as_lifecycle?: Prisma.AccountUncheckedUpdateManyWithoutAccount_lifecycle_lookupNestedInput
   accounts_as_type?: Prisma.AccountUncheckedUpdateManyWithoutAccount_type_lookupNestedInput
   accounts_as_role?: Prisma.AccountUncheckedUpdateManyWithoutAccount_role_lookupNestedInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutQuantity_unit_lookupNestedInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutWork_center_lookupNestedInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutJob_priority_lookupNestedInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutJob_lifecycle_lookupNestedInput
 }
 
 export type LookupCreateManyInput = {
@@ -521,6 +549,62 @@ export type LookupUpdateOneWithoutAccounts_as_roleNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.LookupUpdateToOneWithWhereWithoutAccounts_as_roleInput, Prisma.LookupUpdateWithoutAccounts_as_roleInput>, Prisma.LookupUncheckedUpdateWithoutAccounts_as_roleInput>
 }
 
+export type LookupCreateNestedOneWithoutJobs_as_quantity_unitInput = {
+  create?: Prisma.XOR<Prisma.LookupCreateWithoutJobs_as_quantity_unitInput, Prisma.LookupUncheckedCreateWithoutJobs_as_quantity_unitInput>
+  connectOrCreate?: Prisma.LookupCreateOrConnectWithoutJobs_as_quantity_unitInput
+  connect?: Prisma.LookupWhereUniqueInput
+}
+
+export type LookupCreateNestedOneWithoutJobs_as_work_centerInput = {
+  create?: Prisma.XOR<Prisma.LookupCreateWithoutJobs_as_work_centerInput, Prisma.LookupUncheckedCreateWithoutJobs_as_work_centerInput>
+  connectOrCreate?: Prisma.LookupCreateOrConnectWithoutJobs_as_work_centerInput
+  connect?: Prisma.LookupWhereUniqueInput
+}
+
+export type LookupCreateNestedOneWithoutJobs_as_priorityInput = {
+  create?: Prisma.XOR<Prisma.LookupCreateWithoutJobs_as_priorityInput, Prisma.LookupUncheckedCreateWithoutJobs_as_priorityInput>
+  connectOrCreate?: Prisma.LookupCreateOrConnectWithoutJobs_as_priorityInput
+  connect?: Prisma.LookupWhereUniqueInput
+}
+
+export type LookupCreateNestedOneWithoutJobs_as_lifecycleInput = {
+  create?: Prisma.XOR<Prisma.LookupCreateWithoutJobs_as_lifecycleInput, Prisma.LookupUncheckedCreateWithoutJobs_as_lifecycleInput>
+  connectOrCreate?: Prisma.LookupCreateOrConnectWithoutJobs_as_lifecycleInput
+  connect?: Prisma.LookupWhereUniqueInput
+}
+
+export type LookupUpdateOneRequiredWithoutJobs_as_quantity_unitNestedInput = {
+  create?: Prisma.XOR<Prisma.LookupCreateWithoutJobs_as_quantity_unitInput, Prisma.LookupUncheckedCreateWithoutJobs_as_quantity_unitInput>
+  connectOrCreate?: Prisma.LookupCreateOrConnectWithoutJobs_as_quantity_unitInput
+  upsert?: Prisma.LookupUpsertWithoutJobs_as_quantity_unitInput
+  connect?: Prisma.LookupWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LookupUpdateToOneWithWhereWithoutJobs_as_quantity_unitInput, Prisma.LookupUpdateWithoutJobs_as_quantity_unitInput>, Prisma.LookupUncheckedUpdateWithoutJobs_as_quantity_unitInput>
+}
+
+export type LookupUpdateOneRequiredWithoutJobs_as_work_centerNestedInput = {
+  create?: Prisma.XOR<Prisma.LookupCreateWithoutJobs_as_work_centerInput, Prisma.LookupUncheckedCreateWithoutJobs_as_work_centerInput>
+  connectOrCreate?: Prisma.LookupCreateOrConnectWithoutJobs_as_work_centerInput
+  upsert?: Prisma.LookupUpsertWithoutJobs_as_work_centerInput
+  connect?: Prisma.LookupWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LookupUpdateToOneWithWhereWithoutJobs_as_work_centerInput, Prisma.LookupUpdateWithoutJobs_as_work_centerInput>, Prisma.LookupUncheckedUpdateWithoutJobs_as_work_centerInput>
+}
+
+export type LookupUpdateOneRequiredWithoutJobs_as_priorityNestedInput = {
+  create?: Prisma.XOR<Prisma.LookupCreateWithoutJobs_as_priorityInput, Prisma.LookupUncheckedCreateWithoutJobs_as_priorityInput>
+  connectOrCreate?: Prisma.LookupCreateOrConnectWithoutJobs_as_priorityInput
+  upsert?: Prisma.LookupUpsertWithoutJobs_as_priorityInput
+  connect?: Prisma.LookupWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LookupUpdateToOneWithWhereWithoutJobs_as_priorityInput, Prisma.LookupUpdateWithoutJobs_as_priorityInput>, Prisma.LookupUncheckedUpdateWithoutJobs_as_priorityInput>
+}
+
+export type LookupUpdateOneRequiredWithoutJobs_as_lifecycleNestedInput = {
+  create?: Prisma.XOR<Prisma.LookupCreateWithoutJobs_as_lifecycleInput, Prisma.LookupUncheckedCreateWithoutJobs_as_lifecycleInput>
+  connectOrCreate?: Prisma.LookupCreateOrConnectWithoutJobs_as_lifecycleInput
+  upsert?: Prisma.LookupUpsertWithoutJobs_as_lifecycleInput
+  connect?: Prisma.LookupWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LookupUpdateToOneWithWhereWithoutJobs_as_lifecycleInput, Prisma.LookupUpdateWithoutJobs_as_lifecycleInput>, Prisma.LookupUncheckedUpdateWithoutJobs_as_lifecycleInput>
+}
+
 export type LookupCreateWithoutAccounts_as_lifecycleInput = {
   lookup_type: string
   code: string
@@ -531,6 +615,10 @@ export type LookupCreateWithoutAccounts_as_lifecycleInput = {
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   accounts_as_type?: Prisma.AccountCreateNestedManyWithoutAccount_type_lookupInput
   accounts_as_role?: Prisma.AccountCreateNestedManyWithoutAccount_role_lookupInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutQuantity_unit_lookupInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutWork_center_lookupInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutJob_priority_lookupInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutJob_lifecycle_lookupInput
 }
 
 export type LookupUncheckedCreateWithoutAccounts_as_lifecycleInput = {
@@ -544,6 +632,10 @@ export type LookupUncheckedCreateWithoutAccounts_as_lifecycleInput = {
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   accounts_as_type?: Prisma.AccountUncheckedCreateNestedManyWithoutAccount_type_lookupInput
   accounts_as_role?: Prisma.AccountUncheckedCreateNestedManyWithoutAccount_role_lookupInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutQuantity_unit_lookupInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutWork_center_lookupInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutJob_priority_lookupInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutJob_lifecycle_lookupInput
 }
 
 export type LookupCreateOrConnectWithoutAccounts_as_lifecycleInput = {
@@ -561,6 +653,10 @@ export type LookupCreateWithoutAccounts_as_typeInput = {
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   accounts_as_lifecycle?: Prisma.AccountCreateNestedManyWithoutAccount_lifecycle_lookupInput
   accounts_as_role?: Prisma.AccountCreateNestedManyWithoutAccount_role_lookupInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutQuantity_unit_lookupInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutWork_center_lookupInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutJob_priority_lookupInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutJob_lifecycle_lookupInput
 }
 
 export type LookupUncheckedCreateWithoutAccounts_as_typeInput = {
@@ -574,6 +670,10 @@ export type LookupUncheckedCreateWithoutAccounts_as_typeInput = {
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   accounts_as_lifecycle?: Prisma.AccountUncheckedCreateNestedManyWithoutAccount_lifecycle_lookupInput
   accounts_as_role?: Prisma.AccountUncheckedCreateNestedManyWithoutAccount_role_lookupInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutQuantity_unit_lookupInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutWork_center_lookupInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutJob_priority_lookupInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutJob_lifecycle_lookupInput
 }
 
 export type LookupCreateOrConnectWithoutAccounts_as_typeInput = {
@@ -591,6 +691,10 @@ export type LookupCreateWithoutAccounts_as_roleInput = {
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   accounts_as_lifecycle?: Prisma.AccountCreateNestedManyWithoutAccount_lifecycle_lookupInput
   accounts_as_type?: Prisma.AccountCreateNestedManyWithoutAccount_type_lookupInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutQuantity_unit_lookupInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutWork_center_lookupInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutJob_priority_lookupInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutJob_lifecycle_lookupInput
 }
 
 export type LookupUncheckedCreateWithoutAccounts_as_roleInput = {
@@ -604,6 +708,10 @@ export type LookupUncheckedCreateWithoutAccounts_as_roleInput = {
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   accounts_as_lifecycle?: Prisma.AccountUncheckedCreateNestedManyWithoutAccount_lifecycle_lookupInput
   accounts_as_type?: Prisma.AccountUncheckedCreateNestedManyWithoutAccount_type_lookupInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutQuantity_unit_lookupInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutWork_center_lookupInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutJob_priority_lookupInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutJob_lifecycle_lookupInput
 }
 
 export type LookupCreateOrConnectWithoutAccounts_as_roleInput = {
@@ -632,6 +740,10 @@ export type LookupUpdateWithoutAccounts_as_lifecycleInput = {
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   accounts_as_type?: Prisma.AccountUpdateManyWithoutAccount_type_lookupNestedInput
   accounts_as_role?: Prisma.AccountUpdateManyWithoutAccount_role_lookupNestedInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutQuantity_unit_lookupNestedInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutWork_center_lookupNestedInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutJob_priority_lookupNestedInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutJob_lifecycle_lookupNestedInput
 }
 
 export type LookupUncheckedUpdateWithoutAccounts_as_lifecycleInput = {
@@ -645,6 +757,10 @@ export type LookupUncheckedUpdateWithoutAccounts_as_lifecycleInput = {
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   accounts_as_type?: Prisma.AccountUncheckedUpdateManyWithoutAccount_type_lookupNestedInput
   accounts_as_role?: Prisma.AccountUncheckedUpdateManyWithoutAccount_role_lookupNestedInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutQuantity_unit_lookupNestedInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutWork_center_lookupNestedInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutJob_priority_lookupNestedInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutJob_lifecycle_lookupNestedInput
 }
 
 export type LookupUpsertWithoutAccounts_as_typeInput = {
@@ -668,6 +784,10 @@ export type LookupUpdateWithoutAccounts_as_typeInput = {
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   accounts_as_lifecycle?: Prisma.AccountUpdateManyWithoutAccount_lifecycle_lookupNestedInput
   accounts_as_role?: Prisma.AccountUpdateManyWithoutAccount_role_lookupNestedInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutQuantity_unit_lookupNestedInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutWork_center_lookupNestedInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutJob_priority_lookupNestedInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutJob_lifecycle_lookupNestedInput
 }
 
 export type LookupUncheckedUpdateWithoutAccounts_as_typeInput = {
@@ -681,6 +801,10 @@ export type LookupUncheckedUpdateWithoutAccounts_as_typeInput = {
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   accounts_as_lifecycle?: Prisma.AccountUncheckedUpdateManyWithoutAccount_lifecycle_lookupNestedInput
   accounts_as_role?: Prisma.AccountUncheckedUpdateManyWithoutAccount_role_lookupNestedInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutQuantity_unit_lookupNestedInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutWork_center_lookupNestedInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutJob_priority_lookupNestedInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutJob_lifecycle_lookupNestedInput
 }
 
 export type LookupUpsertWithoutAccounts_as_roleInput = {
@@ -704,6 +828,10 @@ export type LookupUpdateWithoutAccounts_as_roleInput = {
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   accounts_as_lifecycle?: Prisma.AccountUpdateManyWithoutAccount_lifecycle_lookupNestedInput
   accounts_as_type?: Prisma.AccountUpdateManyWithoutAccount_type_lookupNestedInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutQuantity_unit_lookupNestedInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutWork_center_lookupNestedInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutJob_priority_lookupNestedInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutJob_lifecycle_lookupNestedInput
 }
 
 export type LookupUncheckedUpdateWithoutAccounts_as_roleInput = {
@@ -717,6 +845,338 @@ export type LookupUncheckedUpdateWithoutAccounts_as_roleInput = {
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   accounts_as_lifecycle?: Prisma.AccountUncheckedUpdateManyWithoutAccount_lifecycle_lookupNestedInput
   accounts_as_type?: Prisma.AccountUncheckedUpdateManyWithoutAccount_type_lookupNestedInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutQuantity_unit_lookupNestedInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutWork_center_lookupNestedInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutJob_priority_lookupNestedInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutJob_lifecycle_lookupNestedInput
+}
+
+export type LookupCreateWithoutJobs_as_quantity_unitInput = {
+  lookup_type: string
+  code: string
+  label: string
+  description?: string | null
+  sort_order?: number | null
+  is_active?: boolean
+  attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  accounts_as_lifecycle?: Prisma.AccountCreateNestedManyWithoutAccount_lifecycle_lookupInput
+  accounts_as_type?: Prisma.AccountCreateNestedManyWithoutAccount_type_lookupInput
+  accounts_as_role?: Prisma.AccountCreateNestedManyWithoutAccount_role_lookupInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutWork_center_lookupInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutJob_priority_lookupInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutJob_lifecycle_lookupInput
+}
+
+export type LookupUncheckedCreateWithoutJobs_as_quantity_unitInput = {
+  id?: number
+  lookup_type: string
+  code: string
+  label: string
+  description?: string | null
+  sort_order?: number | null
+  is_active?: boolean
+  attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  accounts_as_lifecycle?: Prisma.AccountUncheckedCreateNestedManyWithoutAccount_lifecycle_lookupInput
+  accounts_as_type?: Prisma.AccountUncheckedCreateNestedManyWithoutAccount_type_lookupInput
+  accounts_as_role?: Prisma.AccountUncheckedCreateNestedManyWithoutAccount_role_lookupInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutWork_center_lookupInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutJob_priority_lookupInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutJob_lifecycle_lookupInput
+}
+
+export type LookupCreateOrConnectWithoutJobs_as_quantity_unitInput = {
+  where: Prisma.LookupWhereUniqueInput
+  create: Prisma.XOR<Prisma.LookupCreateWithoutJobs_as_quantity_unitInput, Prisma.LookupUncheckedCreateWithoutJobs_as_quantity_unitInput>
+}
+
+export type LookupCreateWithoutJobs_as_work_centerInput = {
+  lookup_type: string
+  code: string
+  label: string
+  description?: string | null
+  sort_order?: number | null
+  is_active?: boolean
+  attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  accounts_as_lifecycle?: Prisma.AccountCreateNestedManyWithoutAccount_lifecycle_lookupInput
+  accounts_as_type?: Prisma.AccountCreateNestedManyWithoutAccount_type_lookupInput
+  accounts_as_role?: Prisma.AccountCreateNestedManyWithoutAccount_role_lookupInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutQuantity_unit_lookupInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutJob_priority_lookupInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutJob_lifecycle_lookupInput
+}
+
+export type LookupUncheckedCreateWithoutJobs_as_work_centerInput = {
+  id?: number
+  lookup_type: string
+  code: string
+  label: string
+  description?: string | null
+  sort_order?: number | null
+  is_active?: boolean
+  attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  accounts_as_lifecycle?: Prisma.AccountUncheckedCreateNestedManyWithoutAccount_lifecycle_lookupInput
+  accounts_as_type?: Prisma.AccountUncheckedCreateNestedManyWithoutAccount_type_lookupInput
+  accounts_as_role?: Prisma.AccountUncheckedCreateNestedManyWithoutAccount_role_lookupInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutQuantity_unit_lookupInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutJob_priority_lookupInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutJob_lifecycle_lookupInput
+}
+
+export type LookupCreateOrConnectWithoutJobs_as_work_centerInput = {
+  where: Prisma.LookupWhereUniqueInput
+  create: Prisma.XOR<Prisma.LookupCreateWithoutJobs_as_work_centerInput, Prisma.LookupUncheckedCreateWithoutJobs_as_work_centerInput>
+}
+
+export type LookupCreateWithoutJobs_as_priorityInput = {
+  lookup_type: string
+  code: string
+  label: string
+  description?: string | null
+  sort_order?: number | null
+  is_active?: boolean
+  attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  accounts_as_lifecycle?: Prisma.AccountCreateNestedManyWithoutAccount_lifecycle_lookupInput
+  accounts_as_type?: Prisma.AccountCreateNestedManyWithoutAccount_type_lookupInput
+  accounts_as_role?: Prisma.AccountCreateNestedManyWithoutAccount_role_lookupInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutQuantity_unit_lookupInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutWork_center_lookupInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutJob_lifecycle_lookupInput
+}
+
+export type LookupUncheckedCreateWithoutJobs_as_priorityInput = {
+  id?: number
+  lookup_type: string
+  code: string
+  label: string
+  description?: string | null
+  sort_order?: number | null
+  is_active?: boolean
+  attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  accounts_as_lifecycle?: Prisma.AccountUncheckedCreateNestedManyWithoutAccount_lifecycle_lookupInput
+  accounts_as_type?: Prisma.AccountUncheckedCreateNestedManyWithoutAccount_type_lookupInput
+  accounts_as_role?: Prisma.AccountUncheckedCreateNestedManyWithoutAccount_role_lookupInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutQuantity_unit_lookupInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutWork_center_lookupInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutJob_lifecycle_lookupInput
+}
+
+export type LookupCreateOrConnectWithoutJobs_as_priorityInput = {
+  where: Prisma.LookupWhereUniqueInput
+  create: Prisma.XOR<Prisma.LookupCreateWithoutJobs_as_priorityInput, Prisma.LookupUncheckedCreateWithoutJobs_as_priorityInput>
+}
+
+export type LookupCreateWithoutJobs_as_lifecycleInput = {
+  lookup_type: string
+  code: string
+  label: string
+  description?: string | null
+  sort_order?: number | null
+  is_active?: boolean
+  attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  accounts_as_lifecycle?: Prisma.AccountCreateNestedManyWithoutAccount_lifecycle_lookupInput
+  accounts_as_type?: Prisma.AccountCreateNestedManyWithoutAccount_type_lookupInput
+  accounts_as_role?: Prisma.AccountCreateNestedManyWithoutAccount_role_lookupInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutQuantity_unit_lookupInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutWork_center_lookupInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoCreateNestedManyWithoutJob_priority_lookupInput
+}
+
+export type LookupUncheckedCreateWithoutJobs_as_lifecycleInput = {
+  id?: number
+  lookup_type: string
+  code: string
+  label: string
+  description?: string | null
+  sort_order?: number | null
+  is_active?: boolean
+  attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  accounts_as_lifecycle?: Prisma.AccountUncheckedCreateNestedManyWithoutAccount_lifecycle_lookupInput
+  accounts_as_type?: Prisma.AccountUncheckedCreateNestedManyWithoutAccount_type_lookupInput
+  accounts_as_role?: Prisma.AccountUncheckedCreateNestedManyWithoutAccount_role_lookupInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutQuantity_unit_lookupInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutWork_center_lookupInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoUncheckedCreateNestedManyWithoutJob_priority_lookupInput
+}
+
+export type LookupCreateOrConnectWithoutJobs_as_lifecycleInput = {
+  where: Prisma.LookupWhereUniqueInput
+  create: Prisma.XOR<Prisma.LookupCreateWithoutJobs_as_lifecycleInput, Prisma.LookupUncheckedCreateWithoutJobs_as_lifecycleInput>
+}
+
+export type LookupUpsertWithoutJobs_as_quantity_unitInput = {
+  update: Prisma.XOR<Prisma.LookupUpdateWithoutJobs_as_quantity_unitInput, Prisma.LookupUncheckedUpdateWithoutJobs_as_quantity_unitInput>
+  create: Prisma.XOR<Prisma.LookupCreateWithoutJobs_as_quantity_unitInput, Prisma.LookupUncheckedCreateWithoutJobs_as_quantity_unitInput>
+  where?: Prisma.LookupWhereInput
+}
+
+export type LookupUpdateToOneWithWhereWithoutJobs_as_quantity_unitInput = {
+  where?: Prisma.LookupWhereInput
+  data: Prisma.XOR<Prisma.LookupUpdateWithoutJobs_as_quantity_unitInput, Prisma.LookupUncheckedUpdateWithoutJobs_as_quantity_unitInput>
+}
+
+export type LookupUpdateWithoutJobs_as_quantity_unitInput = {
+  lookup_type?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sort_order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  accounts_as_lifecycle?: Prisma.AccountUpdateManyWithoutAccount_lifecycle_lookupNestedInput
+  accounts_as_type?: Prisma.AccountUpdateManyWithoutAccount_type_lookupNestedInput
+  accounts_as_role?: Prisma.AccountUpdateManyWithoutAccount_role_lookupNestedInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutWork_center_lookupNestedInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutJob_priority_lookupNestedInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutJob_lifecycle_lookupNestedInput
+}
+
+export type LookupUncheckedUpdateWithoutJobs_as_quantity_unitInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  lookup_type?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sort_order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  accounts_as_lifecycle?: Prisma.AccountUncheckedUpdateManyWithoutAccount_lifecycle_lookupNestedInput
+  accounts_as_type?: Prisma.AccountUncheckedUpdateManyWithoutAccount_type_lookupNestedInput
+  accounts_as_role?: Prisma.AccountUncheckedUpdateManyWithoutAccount_role_lookupNestedInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutWork_center_lookupNestedInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutJob_priority_lookupNestedInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutJob_lifecycle_lookupNestedInput
+}
+
+export type LookupUpsertWithoutJobs_as_work_centerInput = {
+  update: Prisma.XOR<Prisma.LookupUpdateWithoutJobs_as_work_centerInput, Prisma.LookupUncheckedUpdateWithoutJobs_as_work_centerInput>
+  create: Prisma.XOR<Prisma.LookupCreateWithoutJobs_as_work_centerInput, Prisma.LookupUncheckedCreateWithoutJobs_as_work_centerInput>
+  where?: Prisma.LookupWhereInput
+}
+
+export type LookupUpdateToOneWithWhereWithoutJobs_as_work_centerInput = {
+  where?: Prisma.LookupWhereInput
+  data: Prisma.XOR<Prisma.LookupUpdateWithoutJobs_as_work_centerInput, Prisma.LookupUncheckedUpdateWithoutJobs_as_work_centerInput>
+}
+
+export type LookupUpdateWithoutJobs_as_work_centerInput = {
+  lookup_type?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sort_order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  accounts_as_lifecycle?: Prisma.AccountUpdateManyWithoutAccount_lifecycle_lookupNestedInput
+  accounts_as_type?: Prisma.AccountUpdateManyWithoutAccount_type_lookupNestedInput
+  accounts_as_role?: Prisma.AccountUpdateManyWithoutAccount_role_lookupNestedInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutQuantity_unit_lookupNestedInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutJob_priority_lookupNestedInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutJob_lifecycle_lookupNestedInput
+}
+
+export type LookupUncheckedUpdateWithoutJobs_as_work_centerInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  lookup_type?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sort_order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  accounts_as_lifecycle?: Prisma.AccountUncheckedUpdateManyWithoutAccount_lifecycle_lookupNestedInput
+  accounts_as_type?: Prisma.AccountUncheckedUpdateManyWithoutAccount_type_lookupNestedInput
+  accounts_as_role?: Prisma.AccountUncheckedUpdateManyWithoutAccount_role_lookupNestedInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutQuantity_unit_lookupNestedInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutJob_priority_lookupNestedInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutJob_lifecycle_lookupNestedInput
+}
+
+export type LookupUpsertWithoutJobs_as_priorityInput = {
+  update: Prisma.XOR<Prisma.LookupUpdateWithoutJobs_as_priorityInput, Prisma.LookupUncheckedUpdateWithoutJobs_as_priorityInput>
+  create: Prisma.XOR<Prisma.LookupCreateWithoutJobs_as_priorityInput, Prisma.LookupUncheckedCreateWithoutJobs_as_priorityInput>
+  where?: Prisma.LookupWhereInput
+}
+
+export type LookupUpdateToOneWithWhereWithoutJobs_as_priorityInput = {
+  where?: Prisma.LookupWhereInput
+  data: Prisma.XOR<Prisma.LookupUpdateWithoutJobs_as_priorityInput, Prisma.LookupUncheckedUpdateWithoutJobs_as_priorityInput>
+}
+
+export type LookupUpdateWithoutJobs_as_priorityInput = {
+  lookup_type?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sort_order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  accounts_as_lifecycle?: Prisma.AccountUpdateManyWithoutAccount_lifecycle_lookupNestedInput
+  accounts_as_type?: Prisma.AccountUpdateManyWithoutAccount_type_lookupNestedInput
+  accounts_as_role?: Prisma.AccountUpdateManyWithoutAccount_role_lookupNestedInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutQuantity_unit_lookupNestedInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutWork_center_lookupNestedInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutJob_lifecycle_lookupNestedInput
+}
+
+export type LookupUncheckedUpdateWithoutJobs_as_priorityInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  lookup_type?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sort_order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  accounts_as_lifecycle?: Prisma.AccountUncheckedUpdateManyWithoutAccount_lifecycle_lookupNestedInput
+  accounts_as_type?: Prisma.AccountUncheckedUpdateManyWithoutAccount_type_lookupNestedInput
+  accounts_as_role?: Prisma.AccountUncheckedUpdateManyWithoutAccount_role_lookupNestedInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutQuantity_unit_lookupNestedInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutWork_center_lookupNestedInput
+  jobs_as_lifecycle?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutJob_lifecycle_lookupNestedInput
+}
+
+export type LookupUpsertWithoutJobs_as_lifecycleInput = {
+  update: Prisma.XOR<Prisma.LookupUpdateWithoutJobs_as_lifecycleInput, Prisma.LookupUncheckedUpdateWithoutJobs_as_lifecycleInput>
+  create: Prisma.XOR<Prisma.LookupCreateWithoutJobs_as_lifecycleInput, Prisma.LookupUncheckedCreateWithoutJobs_as_lifecycleInput>
+  where?: Prisma.LookupWhereInput
+}
+
+export type LookupUpdateToOneWithWhereWithoutJobs_as_lifecycleInput = {
+  where?: Prisma.LookupWhereInput
+  data: Prisma.XOR<Prisma.LookupUpdateWithoutJobs_as_lifecycleInput, Prisma.LookupUncheckedUpdateWithoutJobs_as_lifecycleInput>
+}
+
+export type LookupUpdateWithoutJobs_as_lifecycleInput = {
+  lookup_type?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sort_order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  accounts_as_lifecycle?: Prisma.AccountUpdateManyWithoutAccount_lifecycle_lookupNestedInput
+  accounts_as_type?: Prisma.AccountUpdateManyWithoutAccount_type_lookupNestedInput
+  accounts_as_role?: Prisma.AccountUpdateManyWithoutAccount_role_lookupNestedInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutQuantity_unit_lookupNestedInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutWork_center_lookupNestedInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoUpdateManyWithoutJob_priority_lookupNestedInput
+}
+
+export type LookupUncheckedUpdateWithoutJobs_as_lifecycleInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  lookup_type?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sort_order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  is_active?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  accounts_as_lifecycle?: Prisma.AccountUncheckedUpdateManyWithoutAccount_lifecycle_lookupNestedInput
+  accounts_as_type?: Prisma.AccountUncheckedUpdateManyWithoutAccount_type_lookupNestedInput
+  accounts_as_role?: Prisma.AccountUncheckedUpdateManyWithoutAccount_role_lookupNestedInput
+  jobs_as_quantity_unit?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutQuantity_unit_lookupNestedInput
+  jobs_as_work_center?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutWork_center_lookupNestedInput
+  jobs_as_priority?: Prisma.JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutJob_priority_lookupNestedInput
 }
 
 
@@ -728,12 +1188,20 @@ export type LookupCountOutputType = {
   accounts_as_lifecycle: number
   accounts_as_type: number
   accounts_as_role: number
+  jobs_as_quantity_unit: number
+  jobs_as_work_center: number
+  jobs_as_priority: number
+  jobs_as_lifecycle: number
 }
 
 export type LookupCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts_as_lifecycle?: boolean | LookupCountOutputTypeCountAccounts_as_lifecycleArgs
   accounts_as_type?: boolean | LookupCountOutputTypeCountAccounts_as_typeArgs
   accounts_as_role?: boolean | LookupCountOutputTypeCountAccounts_as_roleArgs
+  jobs_as_quantity_unit?: boolean | LookupCountOutputTypeCountJobs_as_quantity_unitArgs
+  jobs_as_work_center?: boolean | LookupCountOutputTypeCountJobs_as_work_centerArgs
+  jobs_as_priority?: boolean | LookupCountOutputTypeCountJobs_as_priorityArgs
+  jobs_as_lifecycle?: boolean | LookupCountOutputTypeCountJobs_as_lifecycleArgs
 }
 
 /**
@@ -767,6 +1235,34 @@ export type LookupCountOutputTypeCountAccounts_as_roleArgs<ExtArgs extends runti
   where?: Prisma.AccountWhereInput
 }
 
+/**
+ * LookupCountOutputType without action
+ */
+export type LookupCountOutputTypeCountJobs_as_quantity_unitArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.JobOffsetPrinterTaiyoWhereInput
+}
+
+/**
+ * LookupCountOutputType without action
+ */
+export type LookupCountOutputTypeCountJobs_as_work_centerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.JobOffsetPrinterTaiyoWhereInput
+}
+
+/**
+ * LookupCountOutputType without action
+ */
+export type LookupCountOutputTypeCountJobs_as_priorityArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.JobOffsetPrinterTaiyoWhereInput
+}
+
+/**
+ * LookupCountOutputType without action
+ */
+export type LookupCountOutputTypeCountJobs_as_lifecycleArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.JobOffsetPrinterTaiyoWhereInput
+}
+
 
 export type LookupSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -780,6 +1276,10 @@ export type LookupSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   accounts_as_lifecycle?: boolean | Prisma.Lookup$accounts_as_lifecycleArgs<ExtArgs>
   accounts_as_type?: boolean | Prisma.Lookup$accounts_as_typeArgs<ExtArgs>
   accounts_as_role?: boolean | Prisma.Lookup$accounts_as_roleArgs<ExtArgs>
+  jobs_as_quantity_unit?: boolean | Prisma.Lookup$jobs_as_quantity_unitArgs<ExtArgs>
+  jobs_as_work_center?: boolean | Prisma.Lookup$jobs_as_work_centerArgs<ExtArgs>
+  jobs_as_priority?: boolean | Prisma.Lookup$jobs_as_priorityArgs<ExtArgs>
+  jobs_as_lifecycle?: boolean | Prisma.Lookup$jobs_as_lifecycleArgs<ExtArgs>
   _count?: boolean | Prisma.LookupCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["lookup"]>
 
@@ -821,6 +1321,10 @@ export type LookupInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   accounts_as_lifecycle?: boolean | Prisma.Lookup$accounts_as_lifecycleArgs<ExtArgs>
   accounts_as_type?: boolean | Prisma.Lookup$accounts_as_typeArgs<ExtArgs>
   accounts_as_role?: boolean | Prisma.Lookup$accounts_as_roleArgs<ExtArgs>
+  jobs_as_quantity_unit?: boolean | Prisma.Lookup$jobs_as_quantity_unitArgs<ExtArgs>
+  jobs_as_work_center?: boolean | Prisma.Lookup$jobs_as_work_centerArgs<ExtArgs>
+  jobs_as_priority?: boolean | Prisma.Lookup$jobs_as_priorityArgs<ExtArgs>
+  jobs_as_lifecycle?: boolean | Prisma.Lookup$jobs_as_lifecycleArgs<ExtArgs>
   _count?: boolean | Prisma.LookupCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LookupIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -832,6 +1336,10 @@ export type $LookupPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     accounts_as_lifecycle: Prisma.$AccountPayload<ExtArgs>[]
     accounts_as_type: Prisma.$AccountPayload<ExtArgs>[]
     accounts_as_role: Prisma.$AccountPayload<ExtArgs>[]
+    jobs_as_quantity_unit: Prisma.$JobOffsetPrinterTaiyoPayload<ExtArgs>[]
+    jobs_as_work_center: Prisma.$JobOffsetPrinterTaiyoPayload<ExtArgs>[]
+    jobs_as_priority: Prisma.$JobOffsetPrinterTaiyoPayload<ExtArgs>[]
+    jobs_as_lifecycle: Prisma.$JobOffsetPrinterTaiyoPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1239,6 +1747,10 @@ export interface Prisma__LookupClient<T, Null = never, ExtArgs extends runtime.T
   accounts_as_lifecycle<T extends Prisma.Lookup$accounts_as_lifecycleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lookup$accounts_as_lifecycleArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   accounts_as_type<T extends Prisma.Lookup$accounts_as_typeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lookup$accounts_as_typeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   accounts_as_role<T extends Prisma.Lookup$accounts_as_roleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lookup$accounts_as_roleArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  jobs_as_quantity_unit<T extends Prisma.Lookup$jobs_as_quantity_unitArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lookup$jobs_as_quantity_unitArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$JobOffsetPrinterTaiyoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  jobs_as_work_center<T extends Prisma.Lookup$jobs_as_work_centerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lookup$jobs_as_work_centerArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$JobOffsetPrinterTaiyoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  jobs_as_priority<T extends Prisma.Lookup$jobs_as_priorityArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lookup$jobs_as_priorityArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$JobOffsetPrinterTaiyoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  jobs_as_lifecycle<T extends Prisma.Lookup$jobs_as_lifecycleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Lookup$jobs_as_lifecycleArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$JobOffsetPrinterTaiyoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1733,6 +2245,102 @@ export type Lookup$accounts_as_roleArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.AccountScalarFieldEnum | Prisma.AccountScalarFieldEnum[]
+}
+
+/**
+ * Lookup.jobs_as_quantity_unit
+ */
+export type Lookup$jobs_as_quantity_unitArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the JobOffsetPrinterTaiyo
+   */
+  select?: Prisma.JobOffsetPrinterTaiyoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the JobOffsetPrinterTaiyo
+   */
+  omit?: Prisma.JobOffsetPrinterTaiyoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.JobOffsetPrinterTaiyoInclude<ExtArgs> | null
+  where?: Prisma.JobOffsetPrinterTaiyoWhereInput
+  orderBy?: Prisma.JobOffsetPrinterTaiyoOrderByWithRelationInput | Prisma.JobOffsetPrinterTaiyoOrderByWithRelationInput[]
+  cursor?: Prisma.JobOffsetPrinterTaiyoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.JobOffsetPrinterTaiyoScalarFieldEnum | Prisma.JobOffsetPrinterTaiyoScalarFieldEnum[]
+}
+
+/**
+ * Lookup.jobs_as_work_center
+ */
+export type Lookup$jobs_as_work_centerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the JobOffsetPrinterTaiyo
+   */
+  select?: Prisma.JobOffsetPrinterTaiyoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the JobOffsetPrinterTaiyo
+   */
+  omit?: Prisma.JobOffsetPrinterTaiyoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.JobOffsetPrinterTaiyoInclude<ExtArgs> | null
+  where?: Prisma.JobOffsetPrinterTaiyoWhereInput
+  orderBy?: Prisma.JobOffsetPrinterTaiyoOrderByWithRelationInput | Prisma.JobOffsetPrinterTaiyoOrderByWithRelationInput[]
+  cursor?: Prisma.JobOffsetPrinterTaiyoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.JobOffsetPrinterTaiyoScalarFieldEnum | Prisma.JobOffsetPrinterTaiyoScalarFieldEnum[]
+}
+
+/**
+ * Lookup.jobs_as_priority
+ */
+export type Lookup$jobs_as_priorityArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the JobOffsetPrinterTaiyo
+   */
+  select?: Prisma.JobOffsetPrinterTaiyoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the JobOffsetPrinterTaiyo
+   */
+  omit?: Prisma.JobOffsetPrinterTaiyoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.JobOffsetPrinterTaiyoInclude<ExtArgs> | null
+  where?: Prisma.JobOffsetPrinterTaiyoWhereInput
+  orderBy?: Prisma.JobOffsetPrinterTaiyoOrderByWithRelationInput | Prisma.JobOffsetPrinterTaiyoOrderByWithRelationInput[]
+  cursor?: Prisma.JobOffsetPrinterTaiyoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.JobOffsetPrinterTaiyoScalarFieldEnum | Prisma.JobOffsetPrinterTaiyoScalarFieldEnum[]
+}
+
+/**
+ * Lookup.jobs_as_lifecycle
+ */
+export type Lookup$jobs_as_lifecycleArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the JobOffsetPrinterTaiyo
+   */
+  select?: Prisma.JobOffsetPrinterTaiyoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the JobOffsetPrinterTaiyo
+   */
+  omit?: Prisma.JobOffsetPrinterTaiyoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.JobOffsetPrinterTaiyoInclude<ExtArgs> | null
+  where?: Prisma.JobOffsetPrinterTaiyoWhereInput
+  orderBy?: Prisma.JobOffsetPrinterTaiyoOrderByWithRelationInput | Prisma.JobOffsetPrinterTaiyoOrderByWithRelationInput[]
+  cursor?: Prisma.JobOffsetPrinterTaiyoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.JobOffsetPrinterTaiyoScalarFieldEnum | Prisma.JobOffsetPrinterTaiyoScalarFieldEnum[]
 }
 
 /**

@@ -47,3 +47,8 @@ export type Lookup = Prisma.LookupModel
  * 
  */
 export type Account = Prisma.AccountModel
+/**
+ * Model JobOffsetPrinterTaiyo
+ * 
+ */
+export type JobOffsetPrinterTaiyo = Prisma.JobOffsetPrinterTaiyoModel

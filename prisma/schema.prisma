@@ -20,6 +20,10 @@ model Lookup {
   accounts_as_lifecycle Account[] @relation("account_lifecycle_lookup")
   accounts_as_type      Account[] @relation("account_type_lookup")
   accounts_as_role      Account[] @relation("account_role_lookup")
+  jobs_as_quantity_unit JobOffsetPrinterTaiyo[] @relation("job_quantity_unit_lookup")
+  jobs_as_work_center   JobOffsetPrinterTaiyo[] @relation("job_work_center_lookup")
+  jobs_as_priority      JobOffsetPrinterTaiyo[] @relation("job_priority_lookup")
+  jobs_as_lifecycle     JobOffsetPrinterTaiyo[] @relation("job_lifecycle_lookup")
 
   @@unique([lookup_type, code])
   @@index([lookup_type])
@@ -50,5 +54,28 @@ model Account {
   must_change_password  Boolean  @default(true)
 
   last_login_time      DateTime?
+}
+
+model JobOffsetPrinterTaiyo {
+  id                  String   @id @default(uuid()) @db.Uuid
+  work_order          String   @unique @db.VarChar(100)
+  sales_order         String   @db.VarChar(100)
+  quantity_order      Int      @default(1)
+  quantity_unit       Int
+  quantity_unit_lookup Lookup  @relation("job_quantity_unit_lookup", fields: [quantity_unit], references: [id])
+  work_center         Int
+  work_center_lookup  Lookup   @relation("job_work_center_lookup", fields: [work_center], references: [id])
+  planned_start_time  DateTime
+  release_date        DateTime?
+  due_date            DateTime?
+  job_priority        Int
+  job_priority_lookup Lookup   @relation("job_priority_lookup", fields: [job_priority], references: [id])
+  job_lifecycle_state Int
+  job_lifecycle_lookup Lookup  @relation("job_lifecycle_lookup", fields: [job_lifecycle_state], references: [id])
+  notes               String   @default("-")
+  attribute           Json?
+
+  @@index([work_center, planned_start_time])
+  @@map("Job_Offset_Printer_Taiyo")
 }
   

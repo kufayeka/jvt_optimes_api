@@ -10,4 +10,5 @@
  */
 export type * from './models/Lookup'
 export type * from './models/Account'
+export type * from './models/JobOffsetPrinterTaiyo'
 export type * from './commonInputTypes'
