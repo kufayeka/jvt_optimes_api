@@ -24,6 +24,11 @@ type JobImportCandidate = {
   data: any;
 };
 
+type JobImportPreviewData = {
+  unpopulated: any[];
+  populated: any[];
+};
+
 const JOB_IMPORT_ALLOWED_FIELDS = new Set([
   'work_order',
   'sales_order',
@@ -166,7 +171,10 @@ export class JobOffsetPrinterTaiyoService {
         total_rows: 0,
         valid_rows: 0,
         invalid_rows: 0,
-        data: [],
+        data: {
+          unpopulated: [],
+          populated: [],
+        },
         errors: [],
       };
     }
@@ -237,7 +245,7 @@ export class JobOffsetPrinterTaiyoService {
 
     const created: any[] = [];
     const errors: JobImportError[] = [];
-    for (const item of preview.data) {
+    for (const item of preview.data.unpopulated) {
       try {
         const saved = await this.add(item);
         created.push(saved);
@@ -525,7 +533,16 @@ export class JobOffsetPrinterTaiyoService {
     const lookupTypes = ['QUANTITY_UNIT', 'WORK_CENTER', 'JOB_PRIORITY'];
     const lookups = await this.prisma.lookup.findMany({
       where: { lookup_type: { in: lookupTypes } },
-      select: { id: true, lookup_type: true, code: true },
+      select: {
+        id: true,
+        lookup_type: true,
+        code: true,
+        label: true,
+        description: true,
+        sort_order: true,
+        is_active: true,
+        attribute: true,
+      },
     });
 
     const codeMaps: Record<string, Map<string, number>> = {
@@ -538,10 +555,16 @@ export class JobOffsetPrinterTaiyoService {
       WORK_CENTER: new Set(),
       JOB_PRIORITY: new Set(),
     };
+    const fullLookupMaps: Record<string, Map<number, any>> = {
+      QUANTITY_UNIT: new Map(),
+      WORK_CENTER: new Map(),
+      JOB_PRIORITY: new Map(),
+    };
 
     lookups.forEach((l) => {
       codeMaps[l.lookup_type].set(l.code.toUpperCase(), l.id);
       idMaps[l.lookup_type].add(l.id);
+      fullLookupMaps[l.lookup_type].set(l.id, l);
     });
 
     rows.forEach((raw, idx) => {
@@ -664,11 +687,21 @@ export class JobOffsetPrinterTaiyoService {
     }
 
     const badRows = new Set(errors.map((e) => e.row));
-    const data = candidates.filter((c) => !badRows.has(c.row)).map((c) => c.data);
+    const unpopulated = candidates.filter((c) => !badRows.has(c.row)).map((c) => c.data);
+    const populated = unpopulated.map((item) => ({
+      ...item,
+      quantity_unit: fullLookupMaps.QUANTITY_UNIT.get(item.quantity_unit) || null,
+      work_center: fullLookupMaps.WORK_CENTER.get(item.work_center) || null,
+      job_priority: fullLookupMaps.JOB_PRIORITY.get(item.job_priority) || null,
+    }));
+    const data: JobImportPreviewData = {
+      unpopulated,
+      populated,
+    };
 
     return {
       total_rows: rows.length,
-      valid_rows: data.length,
+      valid_rows: unpopulated.length,
       invalid_rows: badRows.size,
       data,
       errors,

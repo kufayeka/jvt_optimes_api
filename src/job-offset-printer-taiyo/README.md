@@ -48,6 +48,11 @@ Base path: `/api/jobs/offset-printer-taiyo`
 - `PATCH /:id/complete` : Complete job
 - `PATCH /:id/close` : Close job
 
+### Upload Preview Response
+`POST /excel/upload-preview` akan mengembalikan:
+- `data.unpopulated`: payload valid siap kirim ke `POST /batch-create`
+- `data.populated`: payload valid dengan field lookup dipopulate object lookup untuk kebutuhan review/view
+
 ## 5. Data Model
 Entity disimpan di table `Job_Offset_Printer_Taiyo` dengan kolom utama:
 - `id` (UUID)
