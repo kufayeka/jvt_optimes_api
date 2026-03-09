@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { LookupService } from './lookup.service';
 import {
   ApiTags,
@@ -14,6 +14,7 @@ import {
 import { CreateLookupDto } from './dto/create-lookup.dto';
 import { UpdateLookupDto } from './dto/update-lookup.dto';
 import { LookupResponseDto } from './dto/lookup-response.dto';
+import { LookupDeleteResponseDto } from './dto/lookup-delete-response.dto';
 import { Serialize } from '../common/decorators/serialize.decorator';
 import { ApiErrorResponseDto } from '../common/dto/api-error-response.dto';
 
@@ -33,8 +34,9 @@ export class LookupController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get lookup by id' })
-  @ApiParam({ name: 'id', description: 'Lookup id (uuid)' })
+  @ApiParam({ name: 'id', description: 'Lookup ID (integer)' })
   @ApiOkResponse({ type: LookupResponseDto })
+  @ApiBadRequestResponse({ type: ApiErrorResponseDto, description: 'Invalid ID format' })
   @ApiNotFoundResponse({ type: ApiErrorResponseDto, description: 'Lookup not found' })
   @Serialize(LookupResponseDto)
   findOne(@Param('id') id: string) {
@@ -64,13 +66,13 @@ export class LookupController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Replace an existing lookup' })
-  @ApiParam({ name: 'id', description: 'Lookup id (uuid)' })
+  @ApiParam({ name: 'id', description: 'Lookup ID (integer)' })
   @ApiBody({ type: UpdateLookupDto })
   @ApiOkResponse({ type: LookupResponseDto })
   @ApiNotFoundResponse({ type: ApiErrorResponseDto, description: 'Lookup not found' })
   @ApiBadRequestResponse({
     type: ApiErrorResponseDto,
-    description: 'Validation failed (no fields or invalid fields)',
+    description: 'Validation failed (invalid ID format, no fields, or invalid fields)',
     schema: {
       example: {
         statusCode: 400,
@@ -87,13 +89,13 @@ export class LookupController {
 
   @Patch(':id/activate')
   @ApiOperation({ summary: 'Activate or deactivate a lookup' })
-  @ApiParam({ name: 'id', description: 'Lookup id (uuid)' })
+  @ApiParam({ name: 'id', description: 'Lookup ID (integer)' })
   @ApiBody({ schema: { properties: { is_active: { type: 'boolean' } } } })
   @ApiOkResponse({ type: LookupResponseDto })
   @ApiNotFoundResponse({ type: ApiErrorResponseDto, description: 'Lookup not found' })
   @ApiBadRequestResponse({
     type: ApiErrorResponseDto,
-    description: 'Validation failed (is_active must be boolean)',
+    description: 'Validation failed (invalid ID format or is_active must be boolean)',
     schema: {
       example: {
         statusCode: 400,
@@ -107,5 +109,15 @@ export class LookupController {
   activate(@Param('id') id: string, @Body('is_active') is_active: boolean) {
     return this.svc.setActive(id, is_active);
   }
-}
 
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete lookup by id' })
+  @ApiParam({ name: 'id', description: 'Lookup ID (integer)' })
+  @ApiOkResponse({ type: LookupDeleteResponseDto })
+  @ApiBadRequestResponse({ type: ApiErrorResponseDto, description: 'Invalid ID format' })
+  @ApiNotFoundResponse({ type: ApiErrorResponseDto, description: 'Lookup not found' })
+  @Serialize(LookupDeleteResponseDto)
+  remove(@Param('id') id: string) {
+    return this.svc.remove(id);
+  }
+}

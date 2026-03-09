@@ -7,6 +7,17 @@ import { buildValidationDetails } from '../common/utils/validation';
 export class LookupService {
   constructor(private prisma: PrismaService) {}
 
+  private parseLookupId(id: string | number) {
+    const nid = typeof id === 'string' ? parseInt(id, 10) : id;
+    if (!Number.isInteger(nid) || nid <= 0) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [{ field: 'id', message: 'Invalid ID format' }],
+      });
+    }
+    return nid;
+  }
+
   private createValidationSchema() {
     return yup.object({
       lookup_type: yup.string().required('lookup_type is required').max(100, 'lookup_type max length is 100'),
@@ -37,7 +48,7 @@ export class LookupService {
   }
 
   async findOne(id: string) {
-    const nid = typeof id === 'string' ? parseInt(id, 10) : id;
+    const nid = this.parseLookupId(id);
     const row = await this.prisma.lookup.findUnique({ where: { id: nid } });
     if (!row) throw new NotFoundException('Lookup not found');
     return row;
@@ -54,7 +65,7 @@ export class LookupService {
   }
 
   async update(id: string, data: any) {
-    const nid = typeof id === 'string' ? parseInt(id, 10) : id;
+    const nid = this.parseLookupId(id);
     const schema = this.updateValidationSchema();
     try {
       await schema.validate(data, { abortEarly: false });
@@ -73,7 +84,7 @@ export class LookupService {
   }
 
   async setActive(id: string, isActive: boolean) {
-    const nid = typeof id === 'string' ? parseInt(id, 10) : id;
+    const nid = this.parseLookupId(id);
     if (typeof isActive !== 'boolean') {
       throw new BadRequestException({
         message: 'Validation failed',
@@ -83,5 +94,12 @@ export class LookupService {
     const existing = await this.prisma.lookup.findUnique({ where: { id: nid } });
     if (!existing) throw new NotFoundException('Lookup not found');
     return this.prisma.lookup.update({ where: { id: nid }, data: { is_active: isActive } });
+  }
+
+  async remove(id: string) {
+    const nid = this.parseLookupId(id);
+    const existing = await this.prisma.lookup.findUnique({ where: { id: nid } });
+    if (!existing) throw new NotFoundException('Lookup not found');
+    return this.prisma.lookup.delete({ where: { id: nid } });
   }
 }
