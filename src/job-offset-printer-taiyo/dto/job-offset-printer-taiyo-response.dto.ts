@@ -34,8 +34,32 @@ export class JobOffsetPrinterTaiyoResponseDto {
   planned_start_time: string;
 
   @Expose()
+  @ApiPropertyOptional({ example: '2026-02-19T09:00:00.000Z' })
+  scheduled_date?: string | null;
+
+  @Expose()
   @ApiPropertyOptional({ example: '2026-02-20T08:10:00.000Z' })
   release_date?: string | null;
+
+  @Expose()
+  @ApiPropertyOptional({ example: '2026-02-20T08:30:00.000Z' })
+  run_date?: string | null;
+
+  @Expose()
+  @ApiPropertyOptional({ example: '2026-02-20T10:00:00.000Z' })
+  suspend_date?: string | null;
+
+  @Expose()
+  @ApiPropertyOptional({ example: '2026-02-20T12:00:00.000Z' })
+  complete_date?: string | null;
+
+  @Expose()
+  @ApiPropertyOptional({ example: null, nullable: true })
+  cancel_date?: string | null;
+
+  @Expose()
+  @ApiPropertyOptional({ example: null, nullable: true })
+  close_date?: string | null;
 
   @Expose()
   @ApiPropertyOptional({ example: '2026-02-21T16:00:00.000Z' })

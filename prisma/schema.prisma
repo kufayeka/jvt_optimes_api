@@ -66,7 +66,13 @@ model JobOffsetPrinterTaiyo {
   work_center         Int
   work_center_lookup  Lookup   @relation("job_work_center_lookup", fields: [work_center], references: [id])
   planned_start_time  DateTime
+  scheduled_date      DateTime?
   release_date        DateTime?
+  run_date            DateTime?
+  suspend_date        DateTime?
+  complete_date       DateTime?
+  cancel_date         DateTime?
+  close_date          DateTime?
   due_date            DateTime?
   job_priority        Int
   job_priority_lookup Lookup   @relation("job_priority_lookup", fields: [job_priority], references: [id])

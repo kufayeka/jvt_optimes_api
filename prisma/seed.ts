@@ -226,6 +226,7 @@ async function main() {
     { lookup_type: 'JOB_LIFECYCLE_STATE', code: 'RUNNING', label: 'Running', sort_order: 3 },
     { lookup_type: 'JOB_LIFECYCLE_STATE', code: 'SUSPENDED', label: 'Suspended', sort_order: 4 },
     { lookup_type: 'JOB_LIFECYCLE_STATE', code: 'COMPLETED', label: 'Completed', sort_order: 5 },
+    { lookup_type: 'JOB_LIFECYCLE_STATE', code: 'CANCELLED', label: 'Cancelled', sort_order: 6 },
     { lookup_type: 'JOB_LIFECYCLE_STATE', code: 'CLOSED', label: 'Closed', sort_order: 7 },
     // QUANTITY_UNIT
     { lookup_type: 'QUANTITY_UNIT', code: 'BK', label: 'BK', sort_order: 1 },

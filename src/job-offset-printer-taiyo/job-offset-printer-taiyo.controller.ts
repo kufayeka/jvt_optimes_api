@@ -217,8 +217,20 @@ export class JobOffsetPrinterTaiyoController {
     return this.svc.complete(id);
   }
 
+  @Patch(':id/cancel')
+  @ApiOperation({ summary: 'Cancel job', description: 'Allowed transition: SCHEDULED/RELEASED/RUNNING/SUSPENDED -> CANCELLED' })
+  @ApiParam({ name: 'id', description: 'Job ID (UUID)' })
+  @ApiOkResponse({ type: JobOffsetPrinterTaiyoLifecycleResponseDto })
+  @ApiBadRequestResponse({ type: ApiErrorResponseDto, description: 'Invalid UUID format' })
+  @ApiNotFoundResponse({ type: ApiErrorResponseDto, description: 'Job not found' })
+  @ApiForbiddenResponse({ type: ApiErrorResponseDto, description: 'Transition not allowed' })
+  @Serialize(JobOffsetPrinterTaiyoLifecycleResponseDto)
+  cancel(@Param('id') id: string) {
+    return this.svc.cancel(id);
+  }
+
   @Patch(':id/close')
-  @ApiOperation({ summary: 'Close job', description: 'Allowed transition: RELEASED/COMPLETED -> CLOSED' })
+  @ApiOperation({ summary: 'Close job', description: 'Allowed transition: RELEASED/COMPLETED/CANCELLED -> CLOSED' })
   @ApiParam({ name: 'id', description: 'Job ID (UUID)' })
   @ApiOkResponse({ type: JobOffsetPrinterTaiyoLifecycleResponseDto })
   @ApiBadRequestResponse({ type: ApiErrorResponseDto, description: 'Invalid UUID format' })

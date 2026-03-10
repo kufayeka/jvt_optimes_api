@@ -44,6 +44,15 @@ const JOB_IMPORT_ALLOWED_FIELDS = new Set([
 ]);
 
 const FORBIDDEN_PAYLOAD_KEYS = new Set(['__proto__', 'prototype', 'constructor']);
+const JOB_LIFECYCLE_TIMESTAMP_FIELDS = [
+  'scheduled_date',
+  'release_date',
+  'run_date',
+  'suspend_date',
+  'complete_date',
+  'cancel_date',
+  'close_date',
+] as const;
 
 @Injectable()
 export class JobOffsetPrinterTaiyoService {
@@ -76,8 +85,10 @@ export class JobOffsetPrinterTaiyoService {
     const running = counts.RUNNING || 0;
     const completed = counts.COMPLETED || 0;
     const suspended = counts.SUSPENDED || 0;
+    const cancelled = counts.CANCELLED || 0;
+    const closed = counts.CLOSED || 0;
 
-    const knownTotal = scheduled + released + running + completed + suspended;
+    const knownTotal = scheduled + released + running + completed + suspended + cancelled + closed;
     const other = Math.max(0, total - knownTotal);
 
     return {
@@ -87,6 +98,8 @@ export class JobOffsetPrinterTaiyoService {
       running,
       completed,
       suspended,
+      cancelled,
+      closed,
       other,
       generated_at: new Date().toISOString(),
     };
@@ -438,6 +451,33 @@ export class JobOffsetPrinterTaiyoService {
     };
   }
 
+  private createLifecycleTimestampPatch(
+    current: any,
+    toCode: string,
+    timestamp: Date,
+  ): Record<(typeof JOB_LIFECYCLE_TIMESTAMP_FIELDS)[number], Date | null> {
+    const nextState = { ...current } as Record<string, any>;
+
+    if (!nextState.scheduled_date) {
+      nextState.scheduled_date = current?.planned_start_time ?? timestamp;
+    }
+
+    if (toCode === 'RELEASED') nextState.release_date = timestamp;
+    if (toCode === 'RUNNING') nextState.run_date = timestamp;
+    if (toCode === 'SUSPENDED') nextState.suspend_date = timestamp;
+    if (toCode === 'COMPLETED') nextState.complete_date = timestamp;
+    if (toCode === 'CANCELLED') nextState.cancel_date = timestamp;
+    if (toCode === 'CLOSED') nextState.close_date = timestamp;
+
+    return JOB_LIFECYCLE_TIMESTAMP_FIELDS.reduce(
+      (acc, field) => {
+        acc[field] = nextState[field] ?? null;
+        return acc;
+      },
+      {} as Record<(typeof JOB_LIFECYCLE_TIMESTAMP_FIELDS)[number], Date | null>,
+    );
+  }
+
   private ensureScheduledLifecycle(row: any, action: 'edit' | 'delete') {
     if (row?.job_lifecycle_lookup?.code !== 'SCHEDULED') {
       throw new ForbiddenException(`Cannot ${action} job unless status is SCHEDULED`);
@@ -732,7 +772,13 @@ export class JobOffsetPrinterTaiyoService {
       quantity_unit: this.parseLookupId(data.quantity_unit, 'quantity_unit'),
       work_center: workCenter.id,
       planned_start_time: new Date(data.planned_start_time),
+      scheduled_date: new Date(),
       release_date: data.release_date ? new Date(data.release_date) : null,
+      run_date: null,
+      suspend_date: null,
+      complete_date: null,
+      cancel_date: null,
+      close_date: null,
       due_date: data.due_date ? new Date(data.due_date) : null,
       job_priority: this.parseLookupId(data.job_priority, 'job_priority'),
       job_lifecycle_state: scheduled.id,
@@ -821,9 +867,13 @@ export class JobOffsetPrinterTaiyoService {
     }
 
     const next = await this.resolveLifecycle(toCode);
+    const transitionTime = new Date();
     await this.prisma.jobOffsetPrinterTaiyo.update({
       where: { id },
-      data: { job_lifecycle_state: next.id },
+      data: {
+        job_lifecycle_state: next.id,
+        ...this.createLifecycleTimestampPatch(current, toCode, transitionTime),
+      },
     });
     const fresh = await this.findJobWithLookups(id);
     return this.formatJob(fresh as any);
@@ -845,7 +895,11 @@ export class JobOffsetPrinterTaiyoService {
     return this.transition(id, ['RUNNING', 'SUSPENDED'], 'COMPLETED', 'complete');
   }
 
+  cancel(id: string) {
+    return this.transition(id, ['SCHEDULED', 'RELEASED', 'RUNNING', 'SUSPENDED'], 'CANCELLED', 'cancel');
+  }
+
   close(id: string) {
-    return this.transition(id, ['RELEASED', 'COMPLETED'], 'CLOSED', 'close');
+    return this.transition(id, ['RELEASED', 'COMPLETED', 'CANCELLED'], 'CLOSED', 'close');
   }
 }

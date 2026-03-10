@@ -19,7 +19,10 @@ export class CreateJobOffsetPrinterTaiyoDto {
   @ApiProperty({ example: '2026-02-20T08:00:00.000Z' })
   planned_start_time: string;
 
-  @ApiPropertyOptional({ example: '2026-02-20T08:10:00.000Z' })
+  @ApiPropertyOptional({
+    example: '2026-02-20T08:10:00.000Z',
+    description: 'Optional backfill value. Normally set automatically by the release lifecycle action.',
+  })
   release_date?: string | null;
 
   @ApiPropertyOptional({ example: '2026-02-21T16:00:00.000Z' })

@@ -10,29 +10,37 @@ State yang digunakan:
 - RUNNING
 - SUSPENDED
 - COMPLETED
+- CANCELLED
 - CLOSED
-
-Lookup yang juga disediakan: CANCELLED (untuk kebutuhan ke depan).
 
 ## 3. Business Rules
 - Add job:
   - `work_order` wajib unik.
   - Kombinasi `work_center + planned_start_time` tidak boleh duplikat.
   - `job_lifecycle_state` selalu di-set ke `SCHEDULED` saat create.
+  - `scheduled_date` otomatis diisi saat job dibuat.
 - Edit job:
   - Hanya boleh jika state saat ini `SCHEDULED`.
 - Delete job:
   - Hanya boleh jika state saat ini `SCHEDULED`.
 - Release job:
   - Hanya dari `SCHEDULED` -> `RELEASED`.
+  - `release_date` otomatis diisi saat endpoint release dipanggil.
 - Run job:
   - Hanya dari `RELEASED` -> `RUNNING`.
+  - `run_date` otomatis diisi saat endpoint run dipanggil.
 - Suspend job:
   - Hanya dari `RELEASED` atau `RUNNING` -> `SUSPENDED`.
+  - `suspend_date` otomatis diisi saat endpoint suspend dipanggil.
 - Complete job:
   - Hanya dari `RUNNING` atau `SUSPENDED` -> `COMPLETED`.
+  - `complete_date` otomatis diisi saat endpoint complete dipanggil.
+- Cancel job:
+  - Hanya dari `SCHEDULED`, `RELEASED`, `RUNNING`, atau `SUSPENDED` -> `CANCELLED`.
+  - `cancel_date` otomatis diisi saat endpoint cancel dipanggil.
 - Close job:
-  - Hanya dari `RELEASED` atau `COMPLETED` -> `CLOSED`.
+  - Hanya dari `RELEASED`, `COMPLETED`, atau `CANCELLED` -> `CLOSED`.
+  - `close_date` otomatis diisi saat endpoint close dipanggil.
 
 ## 4. Endpoints
 Base path: `/api/jobs/offset-printer-taiyo`
@@ -46,6 +54,7 @@ Base path: `/api/jobs/offset-printer-taiyo`
 - `PATCH /:id/run` : Run job
 - `PATCH /:id/suspend` : Suspend job
 - `PATCH /:id/complete` : Complete job
+- `PATCH /:id/cancel` : Cancel job
 - `PATCH /:id/close` : Close job
 
 ### Upload Preview Response
@@ -62,7 +71,13 @@ Entity disimpan di table `Job_Offset_Printer_Taiyo` dengan kolom utama:
 - `quantity_unit` (lookup: QUANTITY_UNIT)
 - `work_center` (lookup: WORK_CENTER)
 - `planned_start_time`
+- `scheduled_date`
 - `release_date`
+- `run_date`
+- `suspend_date`
+- `complete_date`
+- `cancel_date`
+- `close_date`
 - `due_date`
 - `job_priority` (lookup: JOB_PRIORITY)
 - `job_lifecycle_state` (lookup: JOB_LIFECYCLE_STATE)

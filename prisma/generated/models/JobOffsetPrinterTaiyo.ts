@@ -50,7 +50,13 @@ export type JobOffsetPrinterTaiyoMinAggregateOutputType = {
   quantity_unit: number | null
   work_center: number | null
   planned_start_time: Date | null
+  scheduled_date: Date | null
   release_date: Date | null
+  run_date: Date | null
+  suspend_date: Date | null
+  complete_date: Date | null
+  cancel_date: Date | null
+  close_date: Date | null
   due_date: Date | null
   job_priority: number | null
   job_lifecycle_state: number | null
@@ -65,7 +71,13 @@ export type JobOffsetPrinterTaiyoMaxAggregateOutputType = {
   quantity_unit: number | null
   work_center: number | null
   planned_start_time: Date | null
+  scheduled_date: Date | null
   release_date: Date | null
+  run_date: Date | null
+  suspend_date: Date | null
+  complete_date: Date | null
+  cancel_date: Date | null
+  close_date: Date | null
   due_date: Date | null
   job_priority: number | null
   job_lifecycle_state: number | null
@@ -80,7 +92,13 @@ export type JobOffsetPrinterTaiyoCountAggregateOutputType = {
   quantity_unit: number
   work_center: number
   planned_start_time: number
+  scheduled_date: number
   release_date: number
+  run_date: number
+  suspend_date: number
+  complete_date: number
+  cancel_date: number
+  close_date: number
   due_date: number
   job_priority: number
   job_lifecycle_state: number
@@ -114,7 +132,13 @@ export type JobOffsetPrinterTaiyoMinAggregateInputType = {
   quantity_unit?: true
   work_center?: true
   planned_start_time?: true
+  scheduled_date?: true
   release_date?: true
+  run_date?: true
+  suspend_date?: true
+  complete_date?: true
+  cancel_date?: true
+  close_date?: true
   due_date?: true
   job_priority?: true
   job_lifecycle_state?: true
@@ -129,7 +153,13 @@ export type JobOffsetPrinterTaiyoMaxAggregateInputType = {
   quantity_unit?: true
   work_center?: true
   planned_start_time?: true
+  scheduled_date?: true
   release_date?: true
+  run_date?: true
+  suspend_date?: true
+  complete_date?: true
+  cancel_date?: true
+  close_date?: true
   due_date?: true
   job_priority?: true
   job_lifecycle_state?: true
@@ -144,7 +174,13 @@ export type JobOffsetPrinterTaiyoCountAggregateInputType = {
   quantity_unit?: true
   work_center?: true
   planned_start_time?: true
+  scheduled_date?: true
   release_date?: true
+  run_date?: true
+  suspend_date?: true
+  complete_date?: true
+  cancel_date?: true
+  close_date?: true
   due_date?: true
   job_priority?: true
   job_lifecycle_state?: true
@@ -247,7 +283,13 @@ export type JobOffsetPrinterTaiyoGroupByOutputType = {
   quantity_unit: number
   work_center: number
   planned_start_time: Date
+  scheduled_date: Date | null
   release_date: Date | null
+  run_date: Date | null
+  suspend_date: Date | null
+  complete_date: Date | null
+  cancel_date: Date | null
+  close_date: Date | null
   due_date: Date | null
   job_priority: number
   job_lifecycle_state: number
@@ -286,7 +328,13 @@ export type JobOffsetPrinterTaiyoWhereInput = {
   quantity_unit?: Prisma.IntFilter<"JobOffsetPrinterTaiyo"> | number
   work_center?: Prisma.IntFilter<"JobOffsetPrinterTaiyo"> | number
   planned_start_time?: Prisma.DateTimeFilter<"JobOffsetPrinterTaiyo"> | Date | string
+  scheduled_date?: Prisma.DateTimeNullableFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
   release_date?: Prisma.DateTimeNullableFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
+  run_date?: Prisma.DateTimeNullableFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
+  suspend_date?: Prisma.DateTimeNullableFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
+  complete_date?: Prisma.DateTimeNullableFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
+  cancel_date?: Prisma.DateTimeNullableFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
+  close_date?: Prisma.DateTimeNullableFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
   due_date?: Prisma.DateTimeNullableFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
   job_priority?: Prisma.IntFilter<"JobOffsetPrinterTaiyo"> | number
   job_lifecycle_state?: Prisma.IntFilter<"JobOffsetPrinterTaiyo"> | number
@@ -306,7 +354,13 @@ export type JobOffsetPrinterTaiyoOrderByWithRelationInput = {
   quantity_unit?: Prisma.SortOrder
   work_center?: Prisma.SortOrder
   planned_start_time?: Prisma.SortOrder
+  scheduled_date?: Prisma.SortOrderInput | Prisma.SortOrder
   release_date?: Prisma.SortOrderInput | Prisma.SortOrder
+  run_date?: Prisma.SortOrderInput | Prisma.SortOrder
+  suspend_date?: Prisma.SortOrderInput | Prisma.SortOrder
+  complete_date?: Prisma.SortOrderInput | Prisma.SortOrder
+  cancel_date?: Prisma.SortOrderInput | Prisma.SortOrder
+  close_date?: Prisma.SortOrderInput | Prisma.SortOrder
   due_date?: Prisma.SortOrderInput | Prisma.SortOrder
   job_priority?: Prisma.SortOrder
   job_lifecycle_state?: Prisma.SortOrder
@@ -329,7 +383,13 @@ export type JobOffsetPrinterTaiyoWhereUniqueInput = Prisma.AtLeast<{
   quantity_unit?: Prisma.IntFilter<"JobOffsetPrinterTaiyo"> | number
   work_center?: Prisma.IntFilter<"JobOffsetPrinterTaiyo"> | number
   planned_start_time?: Prisma.DateTimeFilter<"JobOffsetPrinterTaiyo"> | Date | string
+  scheduled_date?: Prisma.DateTimeNullableFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
   release_date?: Prisma.DateTimeNullableFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
+  run_date?: Prisma.DateTimeNullableFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
+  suspend_date?: Prisma.DateTimeNullableFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
+  complete_date?: Prisma.DateTimeNullableFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
+  cancel_date?: Prisma.DateTimeNullableFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
+  close_date?: Prisma.DateTimeNullableFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
   due_date?: Prisma.DateTimeNullableFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
   job_priority?: Prisma.IntFilter<"JobOffsetPrinterTaiyo"> | number
   job_lifecycle_state?: Prisma.IntFilter<"JobOffsetPrinterTaiyo"> | number
@@ -349,7 +409,13 @@ export type JobOffsetPrinterTaiyoOrderByWithAggregationInput = {
   quantity_unit?: Prisma.SortOrder
   work_center?: Prisma.SortOrder
   planned_start_time?: Prisma.SortOrder
+  scheduled_date?: Prisma.SortOrderInput | Prisma.SortOrder
   release_date?: Prisma.SortOrderInput | Prisma.SortOrder
+  run_date?: Prisma.SortOrderInput | Prisma.SortOrder
+  suspend_date?: Prisma.SortOrderInput | Prisma.SortOrder
+  complete_date?: Prisma.SortOrderInput | Prisma.SortOrder
+  cancel_date?: Prisma.SortOrderInput | Prisma.SortOrder
+  close_date?: Prisma.SortOrderInput | Prisma.SortOrder
   due_date?: Prisma.SortOrderInput | Prisma.SortOrder
   job_priority?: Prisma.SortOrder
   job_lifecycle_state?: Prisma.SortOrder
@@ -373,7 +439,13 @@ export type JobOffsetPrinterTaiyoScalarWhereWithAggregatesInput = {
   quantity_unit?: Prisma.IntWithAggregatesFilter<"JobOffsetPrinterTaiyo"> | number
   work_center?: Prisma.IntWithAggregatesFilter<"JobOffsetPrinterTaiyo"> | number
   planned_start_time?: Prisma.DateTimeWithAggregatesFilter<"JobOffsetPrinterTaiyo"> | Date | string
+  scheduled_date?: Prisma.DateTimeNullableWithAggregatesFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
   release_date?: Prisma.DateTimeNullableWithAggregatesFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
+  run_date?: Prisma.DateTimeNullableWithAggregatesFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
+  suspend_date?: Prisma.DateTimeNullableWithAggregatesFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
+  complete_date?: Prisma.DateTimeNullableWithAggregatesFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
+  cancel_date?: Prisma.DateTimeNullableWithAggregatesFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
+  close_date?: Prisma.DateTimeNullableWithAggregatesFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
   due_date?: Prisma.DateTimeNullableWithAggregatesFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
   job_priority?: Prisma.IntWithAggregatesFilter<"JobOffsetPrinterTaiyo"> | number
   job_lifecycle_state?: Prisma.IntWithAggregatesFilter<"JobOffsetPrinterTaiyo"> | number
@@ -387,7 +459,13 @@ export type JobOffsetPrinterTaiyoCreateInput = {
   sales_order: string
   quantity_order?: number
   planned_start_time: Date | string
+  scheduled_date?: Date | string | null
   release_date?: Date | string | null
+  run_date?: Date | string | null
+  suspend_date?: Date | string | null
+  complete_date?: Date | string | null
+  cancel_date?: Date | string | null
+  close_date?: Date | string | null
   due_date?: Date | string | null
   notes?: string
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -405,7 +483,13 @@ export type JobOffsetPrinterTaiyoUncheckedCreateInput = {
   quantity_unit: number
   work_center: number
   planned_start_time: Date | string
+  scheduled_date?: Date | string | null
   release_date?: Date | string | null
+  run_date?: Date | string | null
+  suspend_date?: Date | string | null
+  complete_date?: Date | string | null
+  cancel_date?: Date | string | null
+  close_date?: Date | string | null
   due_date?: Date | string | null
   job_priority: number
   job_lifecycle_state: number
@@ -419,7 +503,13 @@ export type JobOffsetPrinterTaiyoUpdateInput = {
   sales_order?: Prisma.StringFieldUpdateOperationsInput | string
   quantity_order?: Prisma.IntFieldUpdateOperationsInput | number
   planned_start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduled_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   release_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  run_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspend_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  complete_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  close_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   due_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -437,7 +527,13 @@ export type JobOffsetPrinterTaiyoUncheckedUpdateInput = {
   quantity_unit?: Prisma.IntFieldUpdateOperationsInput | number
   work_center?: Prisma.IntFieldUpdateOperationsInput | number
   planned_start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduled_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   release_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  run_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspend_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  complete_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  close_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   due_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   job_priority?: Prisma.IntFieldUpdateOperationsInput | number
   job_lifecycle_state?: Prisma.IntFieldUpdateOperationsInput | number
@@ -453,7 +549,13 @@ export type JobOffsetPrinterTaiyoCreateManyInput = {
   quantity_unit: number
   work_center: number
   planned_start_time: Date | string
+  scheduled_date?: Date | string | null
   release_date?: Date | string | null
+  run_date?: Date | string | null
+  suspend_date?: Date | string | null
+  complete_date?: Date | string | null
+  cancel_date?: Date | string | null
+  close_date?: Date | string | null
   due_date?: Date | string | null
   job_priority: number
   job_lifecycle_state: number
@@ -467,7 +569,13 @@ export type JobOffsetPrinterTaiyoUpdateManyMutationInput = {
   sales_order?: Prisma.StringFieldUpdateOperationsInput | string
   quantity_order?: Prisma.IntFieldUpdateOperationsInput | number
   planned_start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduled_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   release_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  run_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspend_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  complete_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  close_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   due_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -481,7 +589,13 @@ export type JobOffsetPrinterTaiyoUncheckedUpdateManyInput = {
   quantity_unit?: Prisma.IntFieldUpdateOperationsInput | number
   work_center?: Prisma.IntFieldUpdateOperationsInput | number
   planned_start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduled_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   release_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  run_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspend_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  complete_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  close_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   due_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   job_priority?: Prisma.IntFieldUpdateOperationsInput | number
   job_lifecycle_state?: Prisma.IntFieldUpdateOperationsInput | number
@@ -507,7 +621,13 @@ export type JobOffsetPrinterTaiyoCountOrderByAggregateInput = {
   quantity_unit?: Prisma.SortOrder
   work_center?: Prisma.SortOrder
   planned_start_time?: Prisma.SortOrder
+  scheduled_date?: Prisma.SortOrder
   release_date?: Prisma.SortOrder
+  run_date?: Prisma.SortOrder
+  suspend_date?: Prisma.SortOrder
+  complete_date?: Prisma.SortOrder
+  cancel_date?: Prisma.SortOrder
+  close_date?: Prisma.SortOrder
   due_date?: Prisma.SortOrder
   job_priority?: Prisma.SortOrder
   job_lifecycle_state?: Prisma.SortOrder
@@ -531,7 +651,13 @@ export type JobOffsetPrinterTaiyoMaxOrderByAggregateInput = {
   quantity_unit?: Prisma.SortOrder
   work_center?: Prisma.SortOrder
   planned_start_time?: Prisma.SortOrder
+  scheduled_date?: Prisma.SortOrder
   release_date?: Prisma.SortOrder
+  run_date?: Prisma.SortOrder
+  suspend_date?: Prisma.SortOrder
+  complete_date?: Prisma.SortOrder
+  cancel_date?: Prisma.SortOrder
+  close_date?: Prisma.SortOrder
   due_date?: Prisma.SortOrder
   job_priority?: Prisma.SortOrder
   job_lifecycle_state?: Prisma.SortOrder
@@ -546,7 +672,13 @@ export type JobOffsetPrinterTaiyoMinOrderByAggregateInput = {
   quantity_unit?: Prisma.SortOrder
   work_center?: Prisma.SortOrder
   planned_start_time?: Prisma.SortOrder
+  scheduled_date?: Prisma.SortOrder
   release_date?: Prisma.SortOrder
+  run_date?: Prisma.SortOrder
+  suspend_date?: Prisma.SortOrder
+  complete_date?: Prisma.SortOrder
+  cancel_date?: Prisma.SortOrder
+  close_date?: Prisma.SortOrder
   due_date?: Prisma.SortOrder
   job_priority?: Prisma.SortOrder
   job_lifecycle_state?: Prisma.SortOrder
@@ -739,7 +871,13 @@ export type JobOffsetPrinterTaiyoCreateWithoutQuantity_unit_lookupInput = {
   sales_order: string
   quantity_order?: number
   planned_start_time: Date | string
+  scheduled_date?: Date | string | null
   release_date?: Date | string | null
+  run_date?: Date | string | null
+  suspend_date?: Date | string | null
+  complete_date?: Date | string | null
+  cancel_date?: Date | string | null
+  close_date?: Date | string | null
   due_date?: Date | string | null
   notes?: string
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -755,7 +893,13 @@ export type JobOffsetPrinterTaiyoUncheckedCreateWithoutQuantity_unit_lookupInput
   quantity_order?: number
   work_center: number
   planned_start_time: Date | string
+  scheduled_date?: Date | string | null
   release_date?: Date | string | null
+  run_date?: Date | string | null
+  suspend_date?: Date | string | null
+  complete_date?: Date | string | null
+  cancel_date?: Date | string | null
+  close_date?: Date | string | null
   due_date?: Date | string | null
   job_priority: number
   job_lifecycle_state: number
@@ -779,7 +923,13 @@ export type JobOffsetPrinterTaiyoCreateWithoutWork_center_lookupInput = {
   sales_order: string
   quantity_order?: number
   planned_start_time: Date | string
+  scheduled_date?: Date | string | null
   release_date?: Date | string | null
+  run_date?: Date | string | null
+  suspend_date?: Date | string | null
+  complete_date?: Date | string | null
+  cancel_date?: Date | string | null
+  close_date?: Date | string | null
   due_date?: Date | string | null
   notes?: string
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -795,7 +945,13 @@ export type JobOffsetPrinterTaiyoUncheckedCreateWithoutWork_center_lookupInput =
   quantity_order?: number
   quantity_unit: number
   planned_start_time: Date | string
+  scheduled_date?: Date | string | null
   release_date?: Date | string | null
+  run_date?: Date | string | null
+  suspend_date?: Date | string | null
+  complete_date?: Date | string | null
+  cancel_date?: Date | string | null
+  close_date?: Date | string | null
   due_date?: Date | string | null
   job_priority: number
   job_lifecycle_state: number
@@ -819,7 +975,13 @@ export type JobOffsetPrinterTaiyoCreateWithoutJob_priority_lookupInput = {
   sales_order: string
   quantity_order?: number
   planned_start_time: Date | string
+  scheduled_date?: Date | string | null
   release_date?: Date | string | null
+  run_date?: Date | string | null
+  suspend_date?: Date | string | null
+  complete_date?: Date | string | null
+  cancel_date?: Date | string | null
+  close_date?: Date | string | null
   due_date?: Date | string | null
   notes?: string
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -836,7 +998,13 @@ export type JobOffsetPrinterTaiyoUncheckedCreateWithoutJob_priority_lookupInput 
   quantity_unit: number
   work_center: number
   planned_start_time: Date | string
+  scheduled_date?: Date | string | null
   release_date?: Date | string | null
+  run_date?: Date | string | null
+  suspend_date?: Date | string | null
+  complete_date?: Date | string | null
+  cancel_date?: Date | string | null
+  close_date?: Date | string | null
   due_date?: Date | string | null
   job_lifecycle_state: number
   notes?: string
@@ -859,7 +1027,13 @@ export type JobOffsetPrinterTaiyoCreateWithoutJob_lifecycle_lookupInput = {
   sales_order: string
   quantity_order?: number
   planned_start_time: Date | string
+  scheduled_date?: Date | string | null
   release_date?: Date | string | null
+  run_date?: Date | string | null
+  suspend_date?: Date | string | null
+  complete_date?: Date | string | null
+  cancel_date?: Date | string | null
+  close_date?: Date | string | null
   due_date?: Date | string | null
   notes?: string
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -876,7 +1050,13 @@ export type JobOffsetPrinterTaiyoUncheckedCreateWithoutJob_lifecycle_lookupInput
   quantity_unit: number
   work_center: number
   planned_start_time: Date | string
+  scheduled_date?: Date | string | null
   release_date?: Date | string | null
+  run_date?: Date | string | null
+  suspend_date?: Date | string | null
+  complete_date?: Date | string | null
+  cancel_date?: Date | string | null
+  close_date?: Date | string | null
   due_date?: Date | string | null
   job_priority: number
   notes?: string
@@ -920,7 +1100,13 @@ export type JobOffsetPrinterTaiyoScalarWhereInput = {
   quantity_unit?: Prisma.IntFilter<"JobOffsetPrinterTaiyo"> | number
   work_center?: Prisma.IntFilter<"JobOffsetPrinterTaiyo"> | number
   planned_start_time?: Prisma.DateTimeFilter<"JobOffsetPrinterTaiyo"> | Date | string
+  scheduled_date?: Prisma.DateTimeNullableFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
   release_date?: Prisma.DateTimeNullableFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
+  run_date?: Prisma.DateTimeNullableFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
+  suspend_date?: Prisma.DateTimeNullableFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
+  complete_date?: Prisma.DateTimeNullableFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
+  cancel_date?: Prisma.DateTimeNullableFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
+  close_date?: Prisma.DateTimeNullableFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
   due_date?: Prisma.DateTimeNullableFilter<"JobOffsetPrinterTaiyo"> | Date | string | null
   job_priority?: Prisma.IntFilter<"JobOffsetPrinterTaiyo"> | number
   job_lifecycle_state?: Prisma.IntFilter<"JobOffsetPrinterTaiyo"> | number
@@ -983,7 +1169,13 @@ export type JobOffsetPrinterTaiyoCreateManyQuantity_unit_lookupInput = {
   quantity_order?: number
   work_center: number
   planned_start_time: Date | string
+  scheduled_date?: Date | string | null
   release_date?: Date | string | null
+  run_date?: Date | string | null
+  suspend_date?: Date | string | null
+  complete_date?: Date | string | null
+  cancel_date?: Date | string | null
+  close_date?: Date | string | null
   due_date?: Date | string | null
   job_priority: number
   job_lifecycle_state: number
@@ -998,7 +1190,13 @@ export type JobOffsetPrinterTaiyoCreateManyWork_center_lookupInput = {
   quantity_order?: number
   quantity_unit: number
   planned_start_time: Date | string
+  scheduled_date?: Date | string | null
   release_date?: Date | string | null
+  run_date?: Date | string | null
+  suspend_date?: Date | string | null
+  complete_date?: Date | string | null
+  cancel_date?: Date | string | null
+  close_date?: Date | string | null
   due_date?: Date | string | null
   job_priority: number
   job_lifecycle_state: number
@@ -1014,7 +1212,13 @@ export type JobOffsetPrinterTaiyoCreateManyJob_priority_lookupInput = {
   quantity_unit: number
   work_center: number
   planned_start_time: Date | string
+  scheduled_date?: Date | string | null
   release_date?: Date | string | null
+  run_date?: Date | string | null
+  suspend_date?: Date | string | null
+  complete_date?: Date | string | null
+  cancel_date?: Date | string | null
+  close_date?: Date | string | null
   due_date?: Date | string | null
   job_lifecycle_state: number
   notes?: string
@@ -1029,7 +1233,13 @@ export type JobOffsetPrinterTaiyoCreateManyJob_lifecycle_lookupInput = {
   quantity_unit: number
   work_center: number
   planned_start_time: Date | string
+  scheduled_date?: Date | string | null
   release_date?: Date | string | null
+  run_date?: Date | string | null
+  suspend_date?: Date | string | null
+  complete_date?: Date | string | null
+  cancel_date?: Date | string | null
+  close_date?: Date | string | null
   due_date?: Date | string | null
   job_priority: number
   notes?: string
@@ -1042,7 +1252,13 @@ export type JobOffsetPrinterTaiyoUpdateWithoutQuantity_unit_lookupInput = {
   sales_order?: Prisma.StringFieldUpdateOperationsInput | string
   quantity_order?: Prisma.IntFieldUpdateOperationsInput | number
   planned_start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduled_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   release_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  run_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspend_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  complete_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  close_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   due_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1058,7 +1274,13 @@ export type JobOffsetPrinterTaiyoUncheckedUpdateWithoutQuantity_unit_lookupInput
   quantity_order?: Prisma.IntFieldUpdateOperationsInput | number
   work_center?: Prisma.IntFieldUpdateOperationsInput | number
   planned_start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduled_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   release_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  run_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspend_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  complete_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  close_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   due_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   job_priority?: Prisma.IntFieldUpdateOperationsInput | number
   job_lifecycle_state?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1073,7 +1295,13 @@ export type JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutQuantity_unit_lookupI
   quantity_order?: Prisma.IntFieldUpdateOperationsInput | number
   work_center?: Prisma.IntFieldUpdateOperationsInput | number
   planned_start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduled_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   release_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  run_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspend_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  complete_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  close_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   due_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   job_priority?: Prisma.IntFieldUpdateOperationsInput | number
   job_lifecycle_state?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1087,7 +1315,13 @@ export type JobOffsetPrinterTaiyoUpdateWithoutWork_center_lookupInput = {
   sales_order?: Prisma.StringFieldUpdateOperationsInput | string
   quantity_order?: Prisma.IntFieldUpdateOperationsInput | number
   planned_start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduled_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   release_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  run_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspend_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  complete_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  close_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   due_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1103,7 +1337,13 @@ export type JobOffsetPrinterTaiyoUncheckedUpdateWithoutWork_center_lookupInput =
   quantity_order?: Prisma.IntFieldUpdateOperationsInput | number
   quantity_unit?: Prisma.IntFieldUpdateOperationsInput | number
   planned_start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduled_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   release_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  run_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspend_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  complete_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  close_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   due_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   job_priority?: Prisma.IntFieldUpdateOperationsInput | number
   job_lifecycle_state?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1118,7 +1358,13 @@ export type JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutWork_center_lookupInp
   quantity_order?: Prisma.IntFieldUpdateOperationsInput | number
   quantity_unit?: Prisma.IntFieldUpdateOperationsInput | number
   planned_start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduled_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   release_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  run_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspend_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  complete_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  close_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   due_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   job_priority?: Prisma.IntFieldUpdateOperationsInput | number
   job_lifecycle_state?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1132,7 +1378,13 @@ export type JobOffsetPrinterTaiyoUpdateWithoutJob_priority_lookupInput = {
   sales_order?: Prisma.StringFieldUpdateOperationsInput | string
   quantity_order?: Prisma.IntFieldUpdateOperationsInput | number
   planned_start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduled_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   release_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  run_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspend_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  complete_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  close_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   due_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1149,7 +1401,13 @@ export type JobOffsetPrinterTaiyoUncheckedUpdateWithoutJob_priority_lookupInput 
   quantity_unit?: Prisma.IntFieldUpdateOperationsInput | number
   work_center?: Prisma.IntFieldUpdateOperationsInput | number
   planned_start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduled_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   release_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  run_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspend_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  complete_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  close_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   due_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   job_lifecycle_state?: Prisma.IntFieldUpdateOperationsInput | number
   notes?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1164,7 +1422,13 @@ export type JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutJob_priority_lookupIn
   quantity_unit?: Prisma.IntFieldUpdateOperationsInput | number
   work_center?: Prisma.IntFieldUpdateOperationsInput | number
   planned_start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduled_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   release_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  run_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspend_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  complete_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  close_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   due_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   job_lifecycle_state?: Prisma.IntFieldUpdateOperationsInput | number
   notes?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1177,7 +1441,13 @@ export type JobOffsetPrinterTaiyoUpdateWithoutJob_lifecycle_lookupInput = {
   sales_order?: Prisma.StringFieldUpdateOperationsInput | string
   quantity_order?: Prisma.IntFieldUpdateOperationsInput | number
   planned_start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduled_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   release_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  run_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspend_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  complete_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  close_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   due_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   notes?: Prisma.StringFieldUpdateOperationsInput | string
   attribute?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
@@ -1194,7 +1464,13 @@ export type JobOffsetPrinterTaiyoUncheckedUpdateWithoutJob_lifecycle_lookupInput
   quantity_unit?: Prisma.IntFieldUpdateOperationsInput | number
   work_center?: Prisma.IntFieldUpdateOperationsInput | number
   planned_start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduled_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   release_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  run_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspend_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  complete_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  close_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   due_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   job_priority?: Prisma.IntFieldUpdateOperationsInput | number
   notes?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1209,7 +1485,13 @@ export type JobOffsetPrinterTaiyoUncheckedUpdateManyWithoutJob_lifecycle_lookupI
   quantity_unit?: Prisma.IntFieldUpdateOperationsInput | number
   work_center?: Prisma.IntFieldUpdateOperationsInput | number
   planned_start_time?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  scheduled_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   release_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  run_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  suspend_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  complete_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancel_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  close_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   due_date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   job_priority?: Prisma.IntFieldUpdateOperationsInput | number
   notes?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1226,7 +1508,13 @@ export type JobOffsetPrinterTaiyoSelect<ExtArgs extends runtime.Types.Extensions
   quantity_unit?: boolean
   work_center?: boolean
   planned_start_time?: boolean
+  scheduled_date?: boolean
   release_date?: boolean
+  run_date?: boolean
+  suspend_date?: boolean
+  complete_date?: boolean
+  cancel_date?: boolean
+  close_date?: boolean
   due_date?: boolean
   job_priority?: boolean
   job_lifecycle_state?: boolean
@@ -1246,7 +1534,13 @@ export type JobOffsetPrinterTaiyoSelectCreateManyAndReturn<ExtArgs extends runti
   quantity_unit?: boolean
   work_center?: boolean
   planned_start_time?: boolean
+  scheduled_date?: boolean
   release_date?: boolean
+  run_date?: boolean
+  suspend_date?: boolean
+  complete_date?: boolean
+  cancel_date?: boolean
+  close_date?: boolean
   due_date?: boolean
   job_priority?: boolean
   job_lifecycle_state?: boolean
@@ -1266,7 +1560,13 @@ export type JobOffsetPrinterTaiyoSelectUpdateManyAndReturn<ExtArgs extends runti
   quantity_unit?: boolean
   work_center?: boolean
   planned_start_time?: boolean
+  scheduled_date?: boolean
   release_date?: boolean
+  run_date?: boolean
+  suspend_date?: boolean
+  complete_date?: boolean
+  cancel_date?: boolean
+  close_date?: boolean
   due_date?: boolean
   job_priority?: boolean
   job_lifecycle_state?: boolean
@@ -1286,7 +1586,13 @@ export type JobOffsetPrinterTaiyoSelectScalar = {
   quantity_unit?: boolean
   work_center?: boolean
   planned_start_time?: boolean
+  scheduled_date?: boolean
   release_date?: boolean
+  run_date?: boolean
+  suspend_date?: boolean
+  complete_date?: boolean
+  cancel_date?: boolean
+  close_date?: boolean
   due_date?: boolean
   job_priority?: boolean
   job_lifecycle_state?: boolean
@@ -1294,7 +1600,7 @@ export type JobOffsetPrinterTaiyoSelectScalar = {
   attribute?: boolean
 }
 
-export type JobOffsetPrinterTaiyoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "work_order" | "sales_order" | "quantity_order" | "quantity_unit" | "work_center" | "planned_start_time" | "release_date" | "due_date" | "job_priority" | "job_lifecycle_state" | "notes" | "attribute", ExtArgs["result"]["jobOffsetPrinterTaiyo"]>
+export type JobOffsetPrinterTaiyoOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "work_order" | "sales_order" | "quantity_order" | "quantity_unit" | "work_center" | "planned_start_time" | "scheduled_date" | "release_date" | "run_date" | "suspend_date" | "complete_date" | "cancel_date" | "close_date" | "due_date" | "job_priority" | "job_lifecycle_state" | "notes" | "attribute", ExtArgs["result"]["jobOffsetPrinterTaiyo"]>
 export type JobOffsetPrinterTaiyoInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   quantity_unit_lookup?: boolean | Prisma.LookupDefaultArgs<ExtArgs>
   work_center_lookup?: boolean | Prisma.LookupDefaultArgs<ExtArgs>
@@ -1330,7 +1636,13 @@ export type $JobOffsetPrinterTaiyoPayload<ExtArgs extends runtime.Types.Extensio
     quantity_unit: number
     work_center: number
     planned_start_time: Date
+    scheduled_date: Date | null
     release_date: Date | null
+    run_date: Date | null
+    suspend_date: Date | null
+    complete_date: Date | null
+    cancel_date: Date | null
+    close_date: Date | null
     due_date: Date | null
     job_priority: number
     job_lifecycle_state: number
@@ -1770,7 +2082,13 @@ export interface JobOffsetPrinterTaiyoFieldRefs {
   readonly quantity_unit: Prisma.FieldRef<"JobOffsetPrinterTaiyo", 'Int'>
   readonly work_center: Prisma.FieldRef<"JobOffsetPrinterTaiyo", 'Int'>
   readonly planned_start_time: Prisma.FieldRef<"JobOffsetPrinterTaiyo", 'DateTime'>
+  readonly scheduled_date: Prisma.FieldRef<"JobOffsetPrinterTaiyo", 'DateTime'>
   readonly release_date: Prisma.FieldRef<"JobOffsetPrinterTaiyo", 'DateTime'>
+  readonly run_date: Prisma.FieldRef<"JobOffsetPrinterTaiyo", 'DateTime'>
+  readonly suspend_date: Prisma.FieldRef<"JobOffsetPrinterTaiyo", 'DateTime'>
+  readonly complete_date: Prisma.FieldRef<"JobOffsetPrinterTaiyo", 'DateTime'>
+  readonly cancel_date: Prisma.FieldRef<"JobOffsetPrinterTaiyo", 'DateTime'>
+  readonly close_date: Prisma.FieldRef<"JobOffsetPrinterTaiyo", 'DateTime'>
   readonly due_date: Prisma.FieldRef<"JobOffsetPrinterTaiyo", 'DateTime'>
   readonly job_priority: Prisma.FieldRef<"JobOffsetPrinterTaiyo", 'Int'>
   readonly job_lifecycle_state: Prisma.FieldRef<"JobOffsetPrinterTaiyo", 'Int'>

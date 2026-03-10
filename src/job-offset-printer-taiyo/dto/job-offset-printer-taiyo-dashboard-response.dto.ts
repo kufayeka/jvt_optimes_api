@@ -27,6 +27,14 @@ export class JobOffsetPrinterTaiyoDashboardResponseDto {
   suspended: number;
 
   @Expose()
+  @ApiProperty({ example: 1 })
+  cancelled: number;
+
+  @Expose()
+  @ApiProperty({ example: 5 })
+  closed: number;
+
+  @Expose()
   @ApiProperty({ example: 2 })
   other: number;
 
