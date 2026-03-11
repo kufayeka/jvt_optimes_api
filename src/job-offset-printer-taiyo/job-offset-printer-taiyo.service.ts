@@ -53,6 +53,7 @@ const JOB_LIFECYCLE_TIMESTAMP_FIELDS = [
   'cancel_date',
   'close_date',
 ] as const;
+const SCHEDULE_CONFLICT_IGNORED_LIFECYCLE_CODES = ['COMPLETED', 'CLOSED'] as const;
 
 @Injectable()
 export class JobOffsetPrinterTaiyoService {
@@ -291,8 +292,23 @@ export class JobOffsetPrinterTaiyoService {
     };
   }
 
-  async getAll() {
+  async getAll(workCenterCode?: string) {
+    const normalizedWorkCenterCode = workCenterCode?.trim();
+    if (workCenterCode !== undefined && !normalizedWorkCenterCode) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [{ field: 'work_center', message: 'work_center cannot be empty' }],
+      });
+    }
+
     const rows = await this.prisma.jobOffsetPrinterTaiyo.findMany({
+      where: normalizedWorkCenterCode
+        ? {
+            work_center_lookup: {
+              code: normalizedWorkCenterCode,
+            },
+          }
+        : undefined,
       include: {
         quantity_unit_lookup: true,
         work_center_lookup: true,
@@ -404,6 +420,13 @@ export class JobOffsetPrinterTaiyoService {
       where: {
         work_center,
         planned_start_time,
+        job_lifecycle_lookup: {
+          is: {
+            code: {
+              notIn: [...SCHEDULE_CONFLICT_IGNORED_LIFECYCLE_CODES],
+            },
+          },
+        },
         ...(exceptId ? { id: { not: exceptId } } : {}),
       },
       select: { id: true },
@@ -713,6 +736,13 @@ export class JobOffsetPrinterTaiyoService {
         where: {
           work_center: c.data.work_center,
           planned_start_time: new Date(c.data.planned_start_time),
+          job_lifecycle_lookup: {
+            is: {
+              code: {
+                notIn: [...SCHEDULE_CONFLICT_IGNORED_LIFECYCLE_CODES],
+              },
+            },
+          },
         },
         select: { id: true },
       });

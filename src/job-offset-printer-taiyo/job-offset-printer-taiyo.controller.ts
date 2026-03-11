@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, Query, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiConsumes,
@@ -9,6 +9,7 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiTags,
   ApiBody,
 } from '@nestjs/swagger';
@@ -36,10 +37,15 @@ export class JobOffsetPrinterTaiyoController {
 
   @Get()
   @ApiOperation({ summary: 'Get all jobs' })
+  @ApiQuery({
+    name: 'work_center',
+    required: false,
+    description: 'Filter by related WORK_CENTER lookup code (e.g. Jasuindo.OffsetPrinter.Taiyo1)',
+  })
   @ApiOkResponse({ type: [JobOffsetPrinterTaiyoListResponseDto] })
   @Serialize(JobOffsetPrinterTaiyoListResponseDto)
-  getAll() {
-    return this.svc.getAll();
+  getAll(@Query('work_center') workCenter?: string) {
+    return this.svc.getAll(workCenter);
   }
 
   @Get('dashboard')
