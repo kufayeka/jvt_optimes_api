@@ -16,7 +16,7 @@ State yang digunakan:
 ## 3. Business Rules
 - Add job:
   - `work_order` wajib unik.
-  - Kombinasi `work_center + planned_start_time` tidak boleh duplikat terhadap job yang masih aktif. Job dengan state `COMPLETED` dan `CLOSED` tidak dianggap bentrok.
+  - Kombinasi `work_center + planned_start_time` tidak boleh duplikat terhadap job yang masih aktif. Job dengan state `CANCELLED`, `COMPLETED`, dan `CLOSED` tidak dianggap bentrok.
   - `job_lifecycle_state` selalu di-set ke `SCHEDULED` saat create.
   - `scheduled_date` otomatis diisi saat job dibuat.
 - Edit job:

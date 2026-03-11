@@ -53,7 +53,7 @@ const JOB_LIFECYCLE_TIMESTAMP_FIELDS = [
   'cancel_date',
   'close_date',
 ] as const;
-const SCHEDULE_CONFLICT_IGNORED_LIFECYCLE_CODES = ['COMPLETED', 'CLOSED'] as const;
+const SCHEDULE_CONFLICT_IGNORED_LIFECYCLE_CODES = ['CANCELLED', 'COMPLETED', 'CLOSED'] as const;
 
 @Injectable()
 export class JobOffsetPrinterTaiyoService {
