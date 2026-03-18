@@ -297,7 +297,7 @@ export class JobOffsetPrinterTaiyoService {
     if (workCenterCode !== undefined && !normalizedWorkCenterCode) {
       throw new BadRequestException({
         message: 'Validation failed',
-        details: [{ field: 'work_center', message: 'work_center cannot be empty' }],
+        details: [{ field: 'work_center', message: 'Work Center cannot be empty' }],
       });
     }
 
@@ -338,15 +338,15 @@ export class JobOffsetPrinterTaiyoService {
 
   private createValidationSchema() {
     return yup.object({
-      work_order: yup.string().required('work_order is required').max(100, 'work_order max length is 100'),
-      sales_order: yup.string().required('sales_order is required').max(100, 'sales_order max length is 100'),
-      quantity_order: yup.number().integer('quantity_order must be integer').min(1, 'quantity_order minimum is 1').optional(),
-      quantity_unit: yup.mixed().required('quantity_unit is required'),
-      work_center: yup.mixed().required('work_center is required'),
-      planned_start_time: yup.date().required('planned_start_time is required'),
+      work_order: yup.string().required('Work Order is required').max(100, 'Work Order max length is 100'),
+      sales_order: yup.string().required('Sales Order is required').max(100, 'Sales Order max length is 100'),
+      quantity_order: yup.number().integer('Quantity Order must be integer').min(1, 'Quantity Order minimum is 1').optional(),
+      quantity_unit: yup.mixed().required('Quantity Unit is required'),
+      work_center: yup.mixed().required('Work Center is required'),
+      planned_start_time: yup.date().required('Planned Start Time is required'),
       release_date: yup.date().optional().nullable(),
       due_date: yup.date().optional().nullable(),
-      job_priority: yup.mixed().required('job_priority is required'),
+      job_priority: yup.mixed().required('Job Priority is required'),
       notes: yup.string().optional(),
       attribute: yup.mixed().optional().nullable(),
     });
@@ -354,9 +354,9 @@ export class JobOffsetPrinterTaiyoService {
 
   private updateValidationSchema() {
     return yup.object({
-      work_order: yup.string().optional().max(100, 'work_order max length is 100'),
-      sales_order: yup.string().optional().max(100, 'sales_order max length is 100'),
-      quantity_order: yup.number().integer('quantity_order must be integer').min(1, 'quantity_order minimum is 1').optional(),
+      work_order: yup.string().optional().max(100, 'Work Order max length is 100'),
+      sales_order: yup.string().optional().max(100, 'Sales Order max length is 100'),
+      quantity_order: yup.number().integer('Quantity Order must be integer').min(1, 'Quantity Order minimum is 1').optional(),
       quantity_unit: yup.mixed().optional(),
       work_center: yup.mixed().optional(),
       planned_start_time: yup.date().optional(),
@@ -366,6 +366,38 @@ export class JobOffsetPrinterTaiyoService {
       notes: yup.string().optional(),
       attribute: yup.mixed().optional().nullable(),
     });
+  }
+
+  private ensureDueDateNotBeforePlannedStartTime(plannedStartTime?: Date | null, dueDate?: Date | null) {
+    if (!plannedStartTime || !dueDate) return;
+    if (dueDate < plannedStartTime) {
+      throw new BadRequestException({
+        message: 'Validation failed',
+        details: [
+          {
+            field: 'due_date',
+            message: 'Due Date cannot be earlier than Planned Start Time',
+          },
+        ],
+      });
+    }
+  }
+
+  private addDueDateImportValidation(
+    plannedStartTime: Date | null | undefined,
+    dueDate: Date | null | undefined,
+    rowNumber: number,
+    errors: JobImportError[],
+  ) {
+    if (!plannedStartTime || !dueDate) return;
+    if (dueDate < plannedStartTime) {
+      errors.push({
+        row: rowNumber,
+        field: 'due_date',
+        message: 'Due Date cannot be earlier than Planned Start Time',
+        value: dueDate.toISOString(),
+      });
+    }
   }
 
   private parseLookupId(value: string | number, field: string): number {
@@ -437,7 +469,7 @@ export class JobOffsetPrinterTaiyoService {
         details: [
           {
             field: 'planned_start_time',
-            message: 'planned_start_time conflicts with another job in the same work_center',
+            message: 'Planned Start Time conflicts with another job in the same Work Center',
           },
         ],
       });
@@ -636,16 +668,18 @@ export class JobOffsetPrinterTaiyoService {
 
       const work_order = String(row.work_order ?? '').trim();
       const sales_order = String(row.sales_order ?? '').trim();
-      if (!work_order) errors.push({ row: rowNumber, field: 'work_order', message: 'work_order is required' });
-      if (!sales_order) errors.push({ row: rowNumber, field: 'sales_order', message: 'sales_order is required' });
-      if (work_order && work_order.length > 100) errors.push({ row: rowNumber, field: 'work_order', message: 'work_order max length is 100', value: work_order });
-      if (sales_order && sales_order.length > 100) errors.push({ row: rowNumber, field: 'sales_order', message: 'sales_order max length is 100', value: sales_order });
+      if (!work_order) errors.push({ row: rowNumber, field: 'work_order', message: 'Work Order is required' });
+      if (!sales_order) errors.push({ row: rowNumber, field: 'sales_order', message: 'Sales Order is required' });
+      if (work_order && work_order.length > 100) errors.push({ row: rowNumber, field: 'work_order', message: 'Work Order max length is 100', value: work_order });
+      if (sales_order && sales_order.length > 100) errors.push({ row: rowNumber, field: 'sales_order', message: 'Sales Order max length is 100', value: sales_order });
 
       const quantity_order = this.parseIntegerField(row.quantity_order, 'quantity_order', rowNumber, errors, 1);
       const planned_start_time = this.parseDateField(row.planned_start_time, 'planned_start_time', rowNumber, errors);
       const release_date = this.parseDateField(row.release_date, 'release_date', rowNumber, errors);
       const due_date = this.parseDateField(row.due_date, 'due_date', rowNumber, errors);
       const attribute = this.parseJsonField(row.attribute, 'attribute', rowNumber, errors);
+
+      this.addDueDateImportValidation(planned_start_time, due_date, rowNumber, errors);
 
       const quantity_unit = this.resolveLookupForImport(
         row.quantity_unit,
@@ -700,7 +734,7 @@ export class JobOffsetPrinterTaiyoService {
       if (c.data.work_order) {
         const prev = workOrderRows.get(c.data.work_order);
         if (prev) {
-          errors.push({ row: c.row, field: 'work_order', message: `Duplicate work_order in file (first found at row ${prev})`, value: c.data.work_order });
+          errors.push({ row: c.row, field: 'work_order', message: `Duplicate Work Order in file (first found at row ${prev})`, value: c.data.work_order });
         } else {
           workOrderRows.set(c.data.work_order, c.row);
         }
@@ -709,7 +743,7 @@ export class JobOffsetPrinterTaiyoService {
         const key = `${c.data.work_center}::${c.data.planned_start_time}`;
         const prev = scheduleRows.get(key);
         if (prev) {
-          errors.push({ row: c.row, field: 'planned_start_time', message: `Duplicate work_center + planned_start_time in file (first found at row ${prev})` });
+          errors.push({ row: c.row, field: 'planned_start_time', message: `Duplicate Work Center + Planned Start Time in file (first found at row ${prev})` });
         } else {
           scheduleRows.set(key, c.row);
         }
@@ -750,7 +784,7 @@ export class JobOffsetPrinterTaiyoService {
         errors.push({
           row: c.row,
           field: 'planned_start_time',
-          message: 'planned_start_time conflicts with another job in the same work_center',
+          message: 'Planned Start Time conflicts with another job in the same Work Center',
           value: c.data.planned_start_time,
         });
       }
@@ -790,8 +824,12 @@ export class JobOffsetPrinterTaiyoService {
     const workCenter = await this.resolveLookup(data.work_center, 'WORK_CENTER', 'work_center');
     await this.resolveLookup(data.job_priority, 'JOB_PRIORITY', 'job_priority');
 
+    const plannedStartTime = new Date(data.planned_start_time);
+    const dueDate = data.due_date ? new Date(data.due_date) : null;
+    this.ensureDueDateNotBeforePlannedStartTime(plannedStartTime, dueDate);
+
     await this.assertUniqueWorkOrder(data.work_order);
-    await this.assertNoTimeWorkCenterConflict(workCenter.id, new Date(data.planned_start_time));
+    await this.assertNoTimeWorkCenterConflict(workCenter.id, plannedStartTime);
 
     const scheduled = await this.resolveLifecycle('SCHEDULED');
 
@@ -801,7 +839,7 @@ export class JobOffsetPrinterTaiyoService {
       quantity_order: data.quantity_order ?? 1,
       quantity_unit: this.parseLookupId(data.quantity_unit, 'quantity_unit'),
       work_center: workCenter.id,
-      planned_start_time: new Date(data.planned_start_time),
+      planned_start_time: plannedStartTime,
       scheduled_date: new Date(),
       release_date: data.release_date ? new Date(data.release_date) : null,
       run_date: null,
@@ -809,7 +847,7 @@ export class JobOffsetPrinterTaiyoService {
       complete_date: null,
       cancel_date: null,
       close_date: null,
-      due_date: data.due_date ? new Date(data.due_date) : null,
+      due_date: dueDate,
       job_priority: this.parseLookupId(data.job_priority, 'job_priority'),
       job_lifecycle_state: scheduled.id,
       notes: data.notes ?? '-',
@@ -847,6 +885,10 @@ export class JobOffsetPrinterTaiyoService {
       ? (await this.resolveLookup(data.work_center, 'WORK_CENTER', 'work_center')).id
       : current.work_center;
     const nextPlannedStartTime = data.planned_start_time ? new Date(data.planned_start_time) : current.planned_start_time;
+    const nextDueDate =
+      data.due_date !== undefined ? (data.due_date ? new Date(data.due_date) : null) : current.due_date;
+
+    this.ensureDueDateNotBeforePlannedStartTime(nextPlannedStartTime, nextDueDate);
 
     await this.assertUniqueWorkOrder(nextWorkOrder, id);
     await this.assertNoTimeWorkCenterConflict(nextWorkCenter, nextPlannedStartTime, id);
