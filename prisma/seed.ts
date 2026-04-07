@@ -214,9 +214,9 @@ async function main() {
     { lookup_type: 'ACCOUNT_ROLE', code: 'OPERATOR', label: 'Operator', sort_order: 1 },
     { lookup_type: 'ACCOUNT_ROLE', code: 'ADMINISTRATOR', label: 'Administrator', sort_order: 2 },
     { lookup_type: 'ACCOUNT_ROLE', code: 'PPIC', label: 'PPIC', sort_order: 3 },
-    { lookup_type: 'ACCOUNT_ROLE', code: 'MAINTENANCE', label: 'Maintenance', sort_order: 4 },
-    { lookup_type: 'ACCOUNT_ROLE', code: 'MAINTENANCE_ADMINISTRATOR', label: 'Maintenance Administrator', sort_order: 5 },
-    // JOB_PRIORITY
+    // { lookup_type: 'ACCOUNT_ROLE', code: 'MAINTENANCE', label: 'Maintenance', sort_order: 4 },
+    // { lookup_type: 'ACCOUNT_ROLE', code: 'MAINTENANCE_ADMINISTRATOR', label: 'Maintenance Administrator', sort_order: 5 },
+    // // JOB_PRIORITY
     { lookup_type: 'JOB_PRIORITY', code: 'HIGH', label: 'High', sort_order: 1 },
     { lookup_type: 'JOB_PRIORITY', code: 'MEDIUM', label: 'Medium', sort_order: 2 },
     { lookup_type: 'JOB_PRIORITY', code: 'LOW', label: 'Low', sort_order: 3 },
@@ -229,7 +229,7 @@ async function main() {
     { lookup_type: 'JOB_LIFECYCLE_STATE', code: 'CANCELLED', label: 'Cancelled', sort_order: 6 },
     { lookup_type: 'JOB_LIFECYCLE_STATE', code: 'CLOSED', label: 'Closed', sort_order: 7 },
     // QUANTITY_UNIT
-    { lookup_type: 'QUANTITY_UNIT', code: 'BK', label: 'BK', sort_order: 1 },
+    // { lookup_type: 'QUANTITY_UNIT', code: 'BK', label: 'BK', sort_order: 1 },
     { lookup_type: 'QUANTITY_UNIT', code: 'EA', label: 'EA', sort_order: 2 },
     // WORK_CENTER
     { lookup_type: 'WORK_CENTER', code: 'Jasuindo.OffsetPrinter.Taiyo1', label: 'Offset Printer Taiyo 1', sort_order: 1 },
@@ -282,9 +282,9 @@ async function main() {
 
   const accountSeeds = [
     {
-      username: 'alice2',
+      username: 'alice',
       full_name: 'Alice Operator',
-      email: 'alice2@example.com',
+      email: 'alice@example.com',
       phone_number: null,
       account_type: typePermanent.id,
       account_role: roleOperator?.id ?? null,
@@ -292,9 +292,29 @@ async function main() {
       initial_password: initialPassword,
     },
     {
-      username: 'alice22',
-      full_name: 'Alice Admin',
-      email: 'alice22@example.com',
+      username: 'administrator1',
+      full_name: 'Administrator 1',
+      email: '-',
+      phone_number: null,
+      account_type: typePermanent.id,
+      account_role: roleAdmin?.id ?? null,
+      account_expiry_date: null,
+      initial_password: initialPassword,
+    },
+    {
+      username: 'administrator2',
+      full_name: 'Administrator 2',
+      email: '-',
+      phone_number: null,
+      account_type: typePermanent.id,
+      account_role: roleAdmin?.id ?? null,
+      account_expiry_date: null,
+      initial_password: initialPassword,
+    },
+    {
+      username: 'administrator3',
+      full_name: 'Administrator 3',
+      email: '-',
       phone_number: null,
       account_type: typePermanent.id,
       account_role: roleAdmin?.id ?? null,
